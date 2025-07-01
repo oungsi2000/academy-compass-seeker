@@ -1,7 +1,7 @@
-
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Filter, SortAsc } from "lucide-react";
+import { Filter, SortAsc, ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import SearchForm, { SearchFilters } from "@/components/SearchForm";
 import AcademyCard from "@/components/AcademyCard";
@@ -13,7 +13,7 @@ const AcademyList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [academies, setAcademies] = useState<Academy[]>([]);
   const [sortBy, setSortBy] = useState("rating");
-  const [showFilters, setShowFilters] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
 
   const currentFilters: SearchFilters = {
     keyword: searchParams.get('keyword') || '',
@@ -28,7 +28,6 @@ const AcademyList = () => {
   const filterAndSortAcademies = () => {
     let filtered = [...mockAcademies];
 
-    // 키워드 필터링
     if (currentFilters.keyword) {
       filtered = filtered.filter(academy => 
         academy.name.includes(currentFilters.keyword) ||
@@ -37,21 +36,18 @@ const AcademyList = () => {
       );
     }
 
-    // 지역 필터링
     if (currentFilters.district && currentFilters.district !== '전체') {
       filtered = filtered.filter(academy => 
         academy.district === currentFilters.district
       );
     }
 
-    // 과목 필터링
     if (currentFilters.subject && currentFilters.subject !== '전체') {
       filtered = filtered.filter(academy => 
         academy.subjects.includes(currentFilters.subject)
       );
     }
 
-    // 정렬
     switch (sortBy) {
       case 'rating':
         filtered.sort((a, b) => b.rating - a.rating);
@@ -80,6 +76,7 @@ const AcademyList = () => {
     if (filters.subject && filters.subject !== '전체') params.set('subject', filters.subject);
     
     setSearchParams(params);
+    setShowSearch(false);
   };
 
   const clearFilters = () => {
@@ -90,104 +87,145 @@ const AcademyList = () => {
     <div className="min-h-screen bg-gray-50">
       <Header />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* 검색 폼 */}
-        <div className="mb-8">
-          <SearchForm onSearch={handleSearch} />
+      {/* 모바일 헤더 */}
+      <div className="bg-white shadow-sm border-b px-4 py-4">
+        <div className="flex items-center justify-between mb-4">
+          <Link to="/" className="flex items-center text-blue-600">
+            <ArrowLeft className="w-5 h-5 mr-2" />
+            <span className="font-medium">돌아가기</span>
+          </Link>
+          
+          <Button
+            onClick={() => setShowSearch(!showSearch)}
+            className="bg-blue-600 hover:bg-blue-700 rounded-xl px-4 py-2 shadow-lg"
+          >
+            <Filter className="w-4 h-4 mr-2" />
+            검색
+          </Button>
         </div>
 
-        {/* 필터 및 정렬 */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-          <div className="flex items-center gap-4">
-            <h1 className="text-2xl font-bold text-gray-900">
-              학원 검색 결과 ({academies.length}개)
-            </h1>
-            
-            {(currentFilters.keyword || currentFilters.district || currentFilters.subject) && (
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={clearFilters}
-              >
-                필터 초기화
-              </Button>
-            )}
-          </div>
-
-          <div className="flex items-center gap-4">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowFilters(!showFilters)}
-              className="sm:hidden"
-            >
-              <Filter className="w-4 h-4 mr-2" />
-              필터
-            </Button>
-
-            <div className="flex items-center gap-2">
-              <SortAsc className="w-4 h-4 text-gray-500" />
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-40">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="rating">평점 높은순</SelectItem>
-                  <SelectItem value="students">수강생 많은순</SelectItem>
-                  <SelectItem value="fee-high">등록비 높은순</SelectItem>
-                  <SelectItem value="fee-low">등록비 낮은순</SelectItem>
-                  <SelectItem value="name">이름순</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
+        <div className="flex items-center justify-between">
+          <h1 className="text-xl font-bold text-gray-900">
+            학원 {academies.length}곳
+          </h1>
+          
+          <Select value={sortBy} onValueChange={setSortBy}>
+            <SelectTrigger className="w-32 h-10 rounded-xl">
+              <SortAsc className="w-4 h-4 mr-2" />
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="rating">평점순</SelectItem>
+              <SelectItem value="students">수강생순</SelectItem>
+              <SelectItem value="fee-high">등록비↑</SelectItem>
+              <SelectItem value="fee-low">등록비↓</SelectItem>
+              <SelectItem value="name">이름순</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {/* 활성 필터 표시 */}
         {(currentFilters.keyword || currentFilters.district || currentFilters.subject) && (
-          <div className="flex flex-wrap gap-2 mb-6">
+          <div className="flex flex-wrap gap-2 mt-3">
             {currentFilters.keyword && (
               <span className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
-                키워드: {currentFilters.keyword}
+                "{currentFilters.keyword}"
               </span>
             )}
             {currentFilters.district && currentFilters.district !== '전체' && (
               <span className="inline-flex items-center px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full">
-                지역: {currentFilters.district}
+                {currentFilters.district}
               </span>
             )}
             {currentFilters.subject && currentFilters.subject !== '전체' && (
               <span className="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-800 text-sm rounded-full">
-                과목: {currentFilters.subject}
+                {currentFilters.subject}
               </span>
             )}
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={clearFilters}
+              className="text-gray-500 hover:text-gray-700"
+            >
+              초기화
+            </Button>
           </div>
         )}
-
-        {/* 학원 리스트 */}
-        <div className="space-y-6">
-          {academies.length > 0 ? (
-            academies.map((academy) => (
-              <AcademyCard key={academy.id} academy={academy} />
-            ))
-          ) : (
-            <div className="text-center py-12">
-              <div className="text-gray-400 mb-4">
-                <Filter className="w-16 h-16 mx-auto" />
-              </div>
-              <h3 className="text-xl font-medium text-gray-900 mb-2">
-                검색 결과가 없습니다
-              </h3>
-              <p className="text-gray-600 mb-4">
-                다른 검색 조건으로 다시 시도해보세요
-              </p>
-              <Button onClick={clearFilters}>
-                필터 초기화
-              </Button>
-            </div>
-          )}
-        </div>
       </div>
+
+      {/* 모바일 검색 폼 */}
+      {showSearch && (
+        <div className="bg-white border-b shadow-lg animate-slide-down">
+          <div className="py-4">
+            <SearchForm onSearch={handleSearch} showAdvanced={false} />
+          </div>
+        </div>
+      )}
+
+      {/* 모바일 학원 리스트 */}
+      <div className="px-4 py-4">
+        {academies.length > 0 ? (
+          <div className="space-y-4">
+            {academies.map((academy, index) => (
+              <div 
+                key={academy.id}
+                className="animate-fade-in"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <AcademyCard academy={academy} />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12">
+            <div className="text-gray-400 mb-4">
+              <Filter className="w-16 h-16 mx-auto" />
+            </div>
+            <h3 className="text-xl font-medium text-gray-900 mb-2">
+              검색 결과가 없습니다
+            </h3>
+            <p className="text-gray-600 mb-4">
+              다른 조건으로 검색해보세요
+            </p>
+            <Button onClick={clearFilters} className="bg-blue-600 hover:bg-blue-700 rounded-xl">
+              필터 초기화
+            </Button>
+          </div>
+        )}
+      </div>
+
+      <style>{`
+        .animate-fade-in {
+          animation: fadeIn 0.6s ease-out forwards;
+        }
+        
+        .animate-slide-down {
+          animation: slideDown 0.3s ease-out forwards;
+        }
+        
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            transform: translateY(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
     </div>
   );
 };

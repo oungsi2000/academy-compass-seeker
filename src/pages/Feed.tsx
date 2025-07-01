@@ -1,9 +1,10 @@
 
 import { useState } from "react";
 import { 
-  TrendingUp, Calendar, Filter, 
-  Search, University, Target, 
+  TrendingUp, Calendar, Search, 
+  University, Target, ArrowLeft, Tag
 } from "lucide-react";
+import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -45,10 +46,6 @@ const Feed = () => {
     );
   };
 
-  const admissionTypes = ["전체", "수시", "정시"];
-  const regions = ["전체", "서울", "경기", "인천", "대전", "대구", "부산", "광주"];
-
-  // 이 주의 컨텐츠 (메인 배너)
   const weeklyContent = {
     title: "2024 수능 후 정시 지원 전략",
     summary: "수능 점수 발표 후 효과적인 정시 지원 전략과 대학별 배치표 분석",
@@ -61,41 +58,38 @@ const Feed = () => {
     <div className="min-h-screen bg-gray-50">
       <Header />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* 헤더 섹션 */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            어디다녀 피드
-          </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            최신 입시 동향부터 학습 전략까지, 성공적인 입시 준비를 위한 모든 정보를 제공합니다
-          </p>
+      {/* 모바일 헤더 */}
+      <div className="bg-white shadow-sm border-b px-4 py-4">
+        <div className="flex items-center justify-between">
+          <Link to="/" className="flex items-center text-blue-600">
+            <ArrowLeft className="w-5 h-5 mr-2" />
+            <span className="font-medium">홈으로</span>
+          </Link>
+          <h1 className="text-xl font-bold text-gray-900">어디다녀 피드</h1>
+          <div className="w-16"></div>
         </div>
+      </div>
 
-        {/* 이 주의 컨텐츠 - 메인 배너 */}
-        <Card className="mb-8 overflow-hidden bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
+      <div className="px-4 py-4">
+        {/* 이 주의 컨텐츠 - 모바일 배너 */}
+        <Card className="mb-6 overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-100 border-blue-200 rounded-2xl shadow-lg animate-fade-in">
           <CardContent className="p-0">
-            <div className="flex flex-col lg:flex-row">
-              <div className="lg:w-1/3">
-                <img 
-                  src={weeklyContent.image} 
-                  alt={weeklyContent.title}
-                  className="w-full h-48 lg:h-full object-cover"
-                />
-              </div>
-              <div className="lg:w-2/3 p-8">
-                <div className="flex items-center gap-2 mb-4">
-                  <Badge className="bg-blue-600 text-white">이 주의 컨텐츠</Badge>
-                  <Badge variant="outline">{weeklyContent.category}</Badge>
-                  <span className="text-sm text-gray-500">{weeklyContent.date}</span>
-                </div>
-                <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4">
+            <div className="relative">
+              <img 
+                src={weeklyContent.image} 
+                alt={weeklyContent.title}
+                className="w-full h-48 object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+              <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+                <Badge className="bg-blue-600 text-white mb-2">이 주의 컨텐츠</Badge>
+                <h2 className="text-lg font-bold mb-2 leading-tight">
                   {weeklyContent.title}
                 </h2>
-                <p className="text-gray-600 mb-6 text-lg">
+                <p className="text-sm opacity-90 mb-3">
                   {weeklyContent.summary}
                 </p>
-                <Button className="bg-blue-600 hover:bg-blue-700">
+                <Button size="sm" className="bg-white text-blue-600 hover:bg-gray-100">
                   자세히 보기
                 </Button>
               </div>
@@ -103,216 +97,237 @@ const Feed = () => {
           </CardContent>
         </Card>
 
-        {/* 메인 탭 */}
-        <Tabs defaultValue="news" className="space-y-8">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="news">최신 입시 뉴스</TabsTrigger>
-            <TabsTrigger value="universities">대학 모집요강 비교</TabsTrigger>
+        {/* 모바일 탭 */}
+        <Tabs defaultValue="news" className="space-y-4">
+          <TabsList className="grid w-full grid-cols-2 bg-white rounded-xl shadow-sm h-12">
+            <TabsTrigger value="news" className="rounded-xl">입시 뉴스</TabsTrigger>
+            <TabsTrigger value="universities" className="rounded-xl">대학 비교</TabsTrigger>
           </TabsList>
 
-          {/* 최신 입시 뉴스 */}
+          {/* 입시 뉴스 탭 */}
           <TabsContent value="news">
-            <div className="space-y-6">
-              {/* 검색 및 필터 */}
-              <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-                <h2 className="text-2xl font-bold text-gray-900 flex items-center">
-                  <TrendingUp className="w-6 h-6 mr-2 text-blue-600" />
-                  최신 입시 뉴스
-                </h2>
-                
-                <div className="flex gap-2 w-full sm:w-auto">
-                  <div className="relative flex-1 sm:w-64">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                    <Input
-                      placeholder="검색어를 입력하세요"
-                      value={searchKeyword}
-                      onChange={(e) => setSearchKeyword(e.target.value)}
-                      className="pl-10"
-                    />
-                  </div>
-                  <Select value={selectedTag} onValueChange={setSelectedTag}>
-                    <SelectTrigger className="w-32">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {tags.map(tag => (
-                        <SelectItem key={tag} value={tag}>
-                          {tag}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+            {/* 모바일 검색 및 필터 */}
+            <div className="bg-white rounded-2xl p-4 shadow-sm mb-4 animate-fade-in">
+              <div className="relative mb-3">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Input
+                  placeholder="검색어를 입력하세요"
+                  value={searchKeyword}
+                  onChange={(e) => setSearchKeyword(e.target.value)}
+                  className="pl-10 h-12 rounded-xl border-2 focus:border-blue-500"
+                />
               </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {filteredNews.map((news) => (
-                  <Card key={news.id} className="hover:shadow-lg transition-shadow">
-                    <CardHeader>
-                      <div className="flex items-start justify-between">
-                        <Badge variant="secondary" className="mb-2">
-                          {news.category}
-                        </Badge>
-                        <span className="text-sm text-gray-500">{news.date}</span>
-                      </div>
-                      <CardTitle className="text-lg leading-tight">
-                        {news.title}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-gray-600 mb-4">{news.summary}</p>
-                      <Button variant="outline" size="sm">
-                        자세히 보기
-                      </Button>
-                    </CardContent>
-                  </Card>
+              
+              <div className="flex items-center space-x-2 overflow-x-auto pb-2">
+                <Tag className="w-4 h-4 text-gray-500 flex-shrink-0" />
+                {tags.map(tag => (
+                  <Button
+                    key={tag}
+                    variant={selectedTag === tag ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setSelectedTag(tag)}
+                    className={`rounded-full whitespace-nowrap flex-shrink-0 ${
+                      selectedTag === tag 
+                        ? "bg-blue-600 hover:bg-blue-700" 
+                        : "border-gray-300 hover:border-blue-500"
+                    }`}
+                  >
+                    {tag}
+                  </Button>
                 ))}
               </div>
             </div>
-          </TabsContent>
 
-          {/* 대학 모집요강 비교 */}
-          <TabsContent value="universities">
-            <div className="space-y-6">
-              <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
-                <h2 className="text-2xl font-bold text-gray-900 flex items-center">
-                  <University className="w-6 h-6 mr-2 text-purple-600" />
-                  대학 모집요강 비교
-                </h2>
-                
-                <div className="flex flex-col sm:flex-row gap-2">
-                  <Select 
-                    value={universityFilter.type} 
-                    onValueChange={(value) => setUniversityFilter(prev => ({...prev, type: value}))}
-                  >
-                    <SelectTrigger className="w-32">
-                      <SelectValue placeholder="전형 유형" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {admissionTypes.map(type => (
-                        <SelectItem key={type} value={type}>
-                          {type}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  
-                  <Select 
-                    value={universityFilter.region} 
-                    onValueChange={(value) => setUniversityFilter(prev => ({...prev, region: value}))}
-                  >
-                    <SelectTrigger className="w-32">
-                      <SelectValue placeholder="지역" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {regions.map(region => (
-                        <SelectItem key={region} value={region}>
-                          {region}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              {/* 선택된 대학 비교 */}
-              {selectedUniversities.length > 0 && (
-                <Card className="bg-blue-50 border-blue-200">
-                  <CardHeader>
-                    <CardTitle className="text-blue-900">
-                      선택된 대학 비교 ({selectedUniversities.length}개)
+            {/* 모바일 뉴스 리스트 */}
+            <div className="space-y-4">
+              {filteredNews.map((news, index) => (
+                <Card 
+                  key={news.id} 
+                  className="hover:shadow-lg transition-all duration-300 rounded-2xl animate-fade-in"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <CardHeader className="pb-3">
+                    <div className="flex items-start justify-between mb-2">
+                      <Badge variant="secondary" className="rounded-full">
+                        {news.category}
+                      </Badge>
+                      <span className="text-sm text-gray-500">{news.date}</span>
+                    </div>
+                    <CardTitle className="text-lg leading-tight">
+                      {news.title}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {selectedUniversities.map(id => {
-                        const uni = mockUniversityInfo.find(u => u.id === id);
-                        if (!uni) return null;
-                        return (
-                          <div key={id} className="bg-white p-4 rounded-lg border">
-                            <h4 className="font-bold text-gray-900 mb-2">{uni.university}</h4>
-                            <div className="space-y-1 text-sm text-gray-600">
-                              <p>전형: {uni.type}</p>
-                              <p>지역: {uni.region}</p>
-                              <p>모집인원: {uni.quota}명</p>
-                              <p>기간: {uni.period}</p>
-                            </div>
+                  <CardContent className="pt-0">
+                    <p className="text-gray-600 mb-4 text-sm leading-relaxed">{news.summary}</p>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="rounded-xl border-2 hover:border-blue-500 hover:text-blue-600"
+                    >
+                      자세히 보기
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+
+          {/* 대학 비교 탭 */}
+          <TabsContent value="universities">
+            {/* 모바일 필터 */}
+            <div className="bg-white rounded-2xl p-4 shadow-sm mb-4 space-y-3 animate-fade-in">
+              <Select 
+                value={universityFilter.type} 
+                onValueChange={(value) => setUniversityFilter(prev => ({...prev, type: value}))}
+              >
+                <SelectTrigger className="w-full h-12 rounded-xl border-2 focus:border-blue-500">
+                  <SelectValue placeholder="전형 유형" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="전체">전체</SelectItem>
+                  <SelectItem value="수시">수시</SelectItem>
+                  <SelectItem value="정시">정시</SelectItem>
+                </SelectContent>
+              </Select>
+              
+              <Select 
+                value={universityFilter.region} 
+                onValueChange={(value) => setUniversityFilter(prev => ({...prev, region: value}))}
+              >
+                <SelectTrigger className="w-full h-12 rounded-xl border-2 focus:border-blue-500">
+                  <SelectValue placeholder="지역" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="전체">전체</SelectItem>
+                  <SelectItem value="서울">서울</SelectItem>
+                  <SelectItem value="경기">경기</SelectItem>
+                  <SelectItem value="인천">인천</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* 선택된 대학 비교 */}
+            {selectedUniversities.length > 0 && (
+              <Card className="bg-blue-50 border-blue-200 rounded-2xl mb-4 animate-fade-in">
+                <CardHeader>
+                  <CardTitle className="text-blue-900 text-lg">
+                    선택된 대학 비교 ({selectedUniversities.length}개)
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {selectedUniversities.map(id => {
+                      const uni = mockUniversityInfo.find(u => u.id === id);
+                      if (!uni) return null;
+                      return (
+                        <div key={id} className="bg-white p-4 rounded-xl border">
+                          <div className="flex items-center justify-between mb-2">
+                            <h4 className="font-bold text-gray-900">{uni.university}</h4>
                             <Button
                               size="sm"
                               variant="outline"
                               onClick={() => toggleUniversitySelection(id)}
-                              className="mt-2 w-full"
+                              className="text-red-600 border-red-200 hover:bg-red-50"
                             >
-                              비교에서 제거
+                              제거
                             </Button>
                           </div>
-                        );
-                      })}
+                          <div className="grid grid-cols-2 gap-2 text-sm text-gray-600">
+                            <div>전형: {uni.type}</div>
+                            <div>지역: {uni.region}</div>
+                            <div>인원: {uni.quota}명</div>
+                            <div>기간: {uni.period}</div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* 모바일 대학 리스트 */}
+            <div className="space-y-4">
+              {filteredUniversities.map((uni, index) => (
+                <Card 
+                  key={uni.id} 
+                  className="rounded-2xl animate-fade-in"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <CardContent className="p-4">
+                    <div className="flex items-start justify-between mb-3">
+                      <div>
+                        <h3 className="text-lg font-bold text-gray-900 mb-1">
+                          {uni.university}
+                        </h3>
+                        <div className="flex gap-2 mb-2">
+                          <Badge variant={uni.type === "수시" ? "default" : "secondary"}>
+                            {uni.type}
+                          </Badge>
+                          <Badge variant="outline">{uni.region}</Badge>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2 text-sm text-gray-600 mb-4">
+                      <div className="flex items-center">
+                        <Calendar className="w-4 h-4 mr-2 text-blue-600" />
+                        <span>기간: {uni.period}</span>
+                      </div>
+                      <div className="flex items-center">
+                        <Target className="w-4 h-4 mr-2 text-green-600" />
+                        <span>인원: {uni.quota}명</span>
+                      </div>
+                    </div>
+                    
+                    <div className="mb-4">
+                      <p className="text-sm text-gray-500 mb-2">전형요소:</p>
+                      <div className="flex flex-wrap gap-1">
+                        {uni.requirements.map((req, index) => (
+                          <Badge key={index} variant="outline" className="text-xs">
+                            {req}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant={selectedUniversities.includes(uni.id) ? "default" : "outline"}
+                        onClick={() => toggleUniversitySelection(uni.id)}
+                        className="flex-1 rounded-xl"
+                      >
+                        {selectedUniversities.includes(uni.id) ? "선택됨" : "비교 추가"}
+                      </Button>
+                      <Button size="sm" variant="outline" className="rounded-xl">
+                        상세보기
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
-              )}
-
-              <div className="space-y-4">
-                {filteredUniversities.map((uni) => (
-                  <Card key={uni.id}>
-                    <CardContent className="p-6">
-                      <div className="flex flex-col lg:flex-row lg:items-center gap-4">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-3 mb-2">
-                            <h3 className="text-xl font-bold text-gray-900">
-                              {uni.university}
-                            </h3>
-                            <Badge variant={uni.type === "수시" ? "default" : "secondary"}>
-                              {uni.type}
-                            </Badge>
-                            <Badge variant="outline">{uni.region}</Badge>
-                          </div>
-                          
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
-                            <div className="flex items-center">
-                              <Calendar className="w-4 h-4 mr-2 text-blue-600" />
-                              <span>모집기간: {uni.period}</span>
-                            </div>
-                            <div className="flex items-center">
-                              <Target className="w-4 h-4 mr-2 text-green-600" />
-                              <span>모집인원: {uni.quota}명</span>
-                            </div>
-                          </div>
-                          
-                          <div className="mt-3">
-                            <p className="text-sm text-gray-500 mb-2">전형요소:</p>
-                            <div className="flex flex-wrap gap-1">
-                              {uni.requirements.map((req, index) => (
-                                <Badge key={index} variant="outline" className="text-xs">
-                                  {req}
-                                </Badge>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                        
-                        <div className="lg:w-auto flex gap-2">
-                          <Button
-                            size="sm"
-                            variant={selectedUniversities.includes(uni.id) ? "default" : "outline"}
-                            onClick={() => toggleUniversitySelection(uni.id)}
-                          >
-                            {selectedUniversities.includes(uni.id) ? "선택됨" : "비교 추가"}
-                          </Button>
-                          <Button size="sm" variant="outline">
-                            상세보기
-                          </Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+              ))}
             </div>
           </TabsContent>
         </Tabs>
       </div>
+
+      <style>{`
+        .animate-fade-in {
+          animation: fadeIn 0.6s ease-out forwards;
+        }
+        
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
     </div>
   );
 };

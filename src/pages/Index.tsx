@@ -44,41 +44,63 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
       <Header />
       
-      {/* 히어로 섹션 */}
-      <section className="relative py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 to-indigo-600/5"></div>
-        <div className="relative max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-              정용준님{" "}
-              <span 
-                key={currentTextIndex}
-                className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 inline-block transition-all duration-500 ease-in-out transform opacity-0 animate-fade-in"
-              >
-                {rotatingTexts[currentTextIndex]}
-              </span>
-              을<br />찾고 계신가요?
-            </h1>
-          </div>
+      {/* 모바일 히어로 섹션 */}
+      <section className="px-4 py-8 overflow-hidden">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-6 leading-tight animate-fade-in">
+            정용준님{" "}
+            <span 
+              key={currentTextIndex}
+              className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 inline-block transition-all duration-500 ease-in-out transform animate-bounce-gentle"
+            >
+              {rotatingTexts[currentTextIndex]}
+            </span>
+            을<br />찾고 계신가요?
+          </h1>
+        </div>
 
-          {/* 검색 폼 */}
-          <div className="mb-16">
-            <SearchForm onSearch={handleSearch} />
-          </div>
+        {/* 모바일 검색 폼 */}
+        <div className="mb-8 animate-slide-up" style={{ animationDelay: "300ms" }}>
+          <SearchForm onSearch={handleSearch} />
+        </div>
 
-          {/* 통계 */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <CountUpAnimation
-                  end={stat.number}
-                  suffix={stat.suffix}
-                  className="text-3xl md:text-4xl font-bold text-blue-600 mb-2"
-                  duration={2500 + index * 200}
-                />
-                <div className="text-gray-600">{stat.label}</div>
-              </div>
-            ))}
+        {/* 모바일 통계 카드 */}
+        <div className="grid grid-cols-2 gap-4">
+          {stats.map((stat, index) => (
+            <div 
+              key={index} 
+              className="bg-white rounded-2xl p-6 text-center shadow-lg border border-gray-100 transform hover:scale-105 transition-all duration-300 animate-fade-in"
+              style={{ animationDelay: `${400 + index * 100}ms` }}
+            >
+              <CountUpAnimation
+                end={stat.number}
+                suffix={stat.suffix}
+                className="text-2xl font-bold text-blue-600 mb-2"
+                duration={2500 + index * 200}
+              />
+              <div className="text-sm text-gray-600 font-medium">{stat.label}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* 모바일 안내 섹션 */}
+        <div className="mt-8 bg-white rounded-2xl p-6 shadow-lg animate-fade-in" style={{ animationDelay: "800ms" }}>
+          <h3 className="text-lg font-bold text-gray-900 mb-3 text-center">
+            🎯 맞춤형 학원 찾기
+          </h3>
+          <div className="space-y-3 text-sm text-gray-600">
+            <div className="flex items-center">
+              <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+              <span>지역별 학원 정보 제공</span>
+            </div>
+            <div className="flex items-center">
+              <div className="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
+              <span>실제 수강생 후기 확인</span>
+            </div>
+            <div className="flex items-center">
+              <div className="w-2 h-2 bg-pink-500 rounded-full mr-3"></div>
+              <span>투명한 등록비 공개</span>
+            </div>
           </div>
         </div>
       </section>
@@ -87,15 +109,74 @@ const Index = () => {
         @keyframes fade-in {
           from {
             opacity: 0;
-            transform: translateY(10px);
+            transform: translateY(20px);
           }
           to {
             opacity: 1;
             transform: translateY(0);
           }
         }
+        
+        @keyframes slide-up {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        @keyframes slide-down {
+          from {
+            opacity: 0;
+            transform: translateY(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        @keyframes slide-in-right {
+          from {
+            opacity: 0;
+            transform: translateX(100%);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        
+        @keyframes bounce-gentle {
+          0%, 100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-5px);
+          }
+        }
+        
         .animate-fade-in {
-          animation: fade-in 0.5s ease-out forwards;
+          animation: fade-in 0.6s ease-out forwards;
+        }
+        
+        .animate-slide-up {
+          animation: slide-up 0.6s ease-out forwards;
+        }
+        
+        .animate-slide-down {
+          animation: slide-down 0.4s ease-out forwards;
+        }
+        
+        .animate-slide-in-right {
+          animation: slide-in-right 0.3s ease-out forwards;
+        }
+        
+        .animate-bounce-gentle {
+          animation: bounce-gentle 2s ease-in-out infinite;
         }
       `}</style>
     </div>
