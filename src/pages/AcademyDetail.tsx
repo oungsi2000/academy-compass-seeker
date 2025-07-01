@@ -3,7 +3,9 @@ import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { 
   Star, MapPin, Users, Phone, Calendar, BookOpen, 
-  Award, Camera, Gift, ArrowLeft, MessageCircle 
+  Award, Camera, Gift, ArrowLeft, MessageCircle, 
+  DollarSign, Flag, Wifi, Car, Coffee, Monitor,
+  Users2, Shield, Zap, Clock
 } from "lucide-react";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
@@ -11,10 +13,29 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { mockAcademies } from "@/data/mockData";
+import TeacherDetailDialog from "@/components/TeacherDetailDialog";
+import ReportDialog from "@/components/ReportDialog";
 
 const AcademyDetail = () => {
   const { id } = useParams();
   const academy = mockAcademies.find(a => a.id === Number(id));
+  const [selectedTeacher, setSelectedTeacher] = useState(null);
+  const [isTeacherDialogOpen, setIsTeacherDialogOpen] = useState(false);
+  const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
+
+  // 시설 아이콘 매핑
+  const facilityIcons: { [key: string]: any } = {
+    "개별 학습실": Users2,
+    "자습실": BookOpen,
+    "상담실": MessageCircle,
+    "휴게 공간": Coffee,
+    "무료 Wi-Fi": Wifi,
+    "주차 공간": Car,
+    "스마트 보드": Monitor,
+    "CCTV 보안시설": Shield,
+    "냉난방 시설": Zap,
+    "24시간 개방": Clock
+  };
 
   if (!academy) {
     return (
@@ -33,6 +54,11 @@ const AcademyDetail = () => {
       </div>
     );
   }
+
+  const handleTeacherClick = (teacher: any) => {
+    setSelectedTeacher(teacher);
+    setIsTeacherDialogOpen(true);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -71,9 +97,20 @@ const AcademyDetail = () => {
                 <h1 className="text-3xl font-bold text-gray-900">
                   {academy.name}
                 </h1>
-                <div className="flex items-center text-yellow-500 bg-yellow-50 px-3 py-1 rounded-full">
-                  <Star className="w-5 h-5 fill-current mr-1" />
-                  <span className="font-medium">{academy.rating}</span>
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center text-yellow-500 bg-yellow-50 px-3 py-1 rounded-full">
+                    <Star className="w-5 h-5 fill-current mr-1" />
+                    <span className="font-medium">{academy.rating}</span>
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => setIsReportDialogOpen(true)}
+                    className="text-red-600 border-red-200 hover:bg-red-50"
+                  >
+                    <Flag className="w-4 h-4 mr-1" />
+                    신고
+                  </Button>
                 </div>
               </div>
 
@@ -97,6 +134,10 @@ const AcademyDetail = () => {
                 <div className="flex items-center text-gray-600">
                   <BookOpen className="w-5 h-5 mr-3 text-orange-600" />
                   <span>{academy.subjects.length}개 과목 운영</span>
+                </div>
+                <div className="flex items-center text-gray-600">
+                  <DollarSign className="w-5 h-5 mr-3 text-emerald-600" />
+                  <span>등록비 30만원</span>
                 </div>
               </div>
 
@@ -152,7 +193,7 @@ const AcademyDetail = () => {
           <TabsContent value="teachers">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {academy.teachers.map((teacher) => (
-                <Card key={teacher.id}>
+                <Card key={teacher.id} className="hover:shadow-lg transition-shadow cursor-pointer">
                   <CardContent className="p-6">
                     <div className="flex items-start gap-4">
                       <img 
@@ -173,13 +214,21 @@ const AcademyDetail = () => {
                           <Award className="w-4 h-4 mr-1" />
                           <span>경력 {teacher.experience}</span>
                         </div>
-                        <div className="flex flex-wrap gap-1">
+                        <div className="flex flex-wrap gap-1 mb-3">
                           {teacher.specialties.map((specialty) => (
                             <Badge key={specialty} variant="outline" className="text-xs">
                               {specialty}
                             </Badge>
                           ))}
                         </div>
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => handleTeacherClick(teacher)}
+                          className="text-blue-600 border-blue-200 hover:bg-blue-50"
+                        >
+                          선생님 설명
+                        </Button>
                       </div>
                     </div>
                   </CardContent>
@@ -249,12 +298,15 @@ const AcademyDetail = () => {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {academy.facilities.map((facility, index) => (
-                    <div key={index} className="flex items-center p-4 bg-gray-50 rounded-lg">
-                      <div className="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
-                      <span className="text-gray-900">{facility}</span>
-                    </div>
-                  ))}
+                  {academy.facilities.map((facility, index) => {
+                    const IconComponent = facilityIcons[facility] || BookOpen;
+                    return (
+                      <div key={index} className="flex items-center p-4 bg-gray-50 rounded-lg">
+                        <IconComponent className="w-5 h-5 text-green-600 mr-3" />
+                        <span className="text-gray-900">{facility}</span>
+                      </div>
+                    );
+                  })}
                 </div>
                 <div className="mt-6 p-4 bg-blue-50 rounded-lg">
                   <p className="text-blue-800 text-sm">
@@ -266,6 +318,18 @@ const AcademyDetail = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      <TeacherDetailDialog
+        teacher={selectedTeacher}
+        isOpen={isTeacherDialogOpen}
+        onClose={() => setIsTeacherDialogOpen(false)}
+      />
+
+      <ReportDialog
+        isOpen={isReportDialogOpen}
+        onClose={() => setIsReportDialogOpen(false)}
+        academyName={academy.name}
+      />
     </div>
   );
 };

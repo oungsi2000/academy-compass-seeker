@@ -1,5 +1,5 @@
 
-import { Search, Menu, X } from "lucide-react";
+import { MapPin, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
@@ -25,11 +25,12 @@ const Header = () => {
         <div className="flex justify-between items-center h-16">
           {/* 로고 */}
           <Link to="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
-              <Search className="w-4 h-4 text-white" />
+            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-lg flex items-center justify-center relative overflow-hidden">
+              <MapPin className="w-4 h-4 text-white" />
+              <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/20 to-transparent"></div>
             </div>
-            <span className="text-xl font-bold text-gray-900">
-              학원<span className="text-blue-600">메이트</span>
+            <span className="text-xl font-bold">
+              어디<span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500">다녀</span>
             </span>
           </Link>
 

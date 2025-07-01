@@ -1,9 +1,9 @@
 
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search } from "lucide-react";
 import Header from "@/components/Header";
 import SearchForm, { SearchFilters } from "@/components/SearchForm";
+import CountUpAnimation from "@/components/CountUpAnimation";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -34,10 +34,10 @@ const Index = () => {
   };
 
   const stats = [
-    { number: "1,200+", label: "등록된 학원" },
-    { number: "15,000+", label: "수강생 후기" },
-    { number: "98%", label: "만족도" },
-    { number: "24/7", label: "지원 서비스" }
+    { number: 1200, suffix: "+", label: "등록된 학원" },
+    { number: 15000, suffix: "+", label: "수강생 후기" },
+    { number: 98, suffix: "%", label: "만족도" },
+    { number: 24, suffix: "/7", label: "지원 서비스" }
   ];
 
   return (
@@ -51,7 +51,13 @@ const Index = () => {
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
               정용준님{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 transition-all duration-500">
+              <span 
+                key={currentTextIndex}
+                className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 inline-block transition-all duration-500 ease-in-out transform"
+                style={{
+                  animation: 'fadeInUp 0.5s ease-out'
+                }}
+              >
                 {rotatingTexts[currentTextIndex]}
               </span>
               을<br />찾고 계신가요?
@@ -67,15 +73,31 @@ const Index = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-blue-600 mb-2">
-                  {stat.number}
-                </div>
+                <CountUpAnimation
+                  end={stat.number}
+                  suffix={stat.suffix}
+                  className="text-3xl md:text-4xl font-bold text-blue-600 mb-2"
+                  duration={2500 + index * 200}
+                />
                 <div className="text-gray-600">{stat.label}</div>
               </div>
             ))}
           </div>
         </div>
       </section>
+
+      <style jsx>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
     </div>
   );
 };

@@ -1,5 +1,5 @@
 
-import { Search, MapPin, BookOpen } from "lucide-react";
+import { Search, MapPin, BookOpen, ChevronDown } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -45,33 +45,20 @@ const SearchForm = ({ onSearch, showAdvanced = true }: SearchFormProps) => {
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-4xl mx-auto">
       {showAdvanced ? (
-        <div className="bg-white rounded-2xl shadow-lg p-6 border">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 flex items-center">
-                <Search className="w-4 h-4 mr-1" />
-                학원명/과목
-              </label>
-              <Input
-                type="text"
-                placeholder="예: 국어 학원"
-                value={filters.keyword}
-                onChange={(e) => handleInputChange("keyword", e.target.value)}
-                className="h-12"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 flex items-center">
-                <MapPin className="w-4 h-4 mr-1" />
-                지역
-              </label>
+        <div className="bg-white rounded-full shadow-lg border border-gray-200 p-2">
+          <div className="flex items-center gap-2">
+            {/* 지역 선택 */}
+            <div className="flex items-center bg-gray-900 text-white px-4 py-3 rounded-full min-w-[120px]">
+              <MapPin className="w-4 h-4 mr-2" />
               <Select 
                 value={filters.district} 
                 onValueChange={(value) => handleInputChange("district", value)}
               >
-                <SelectTrigger className="h-12">
-                  <SelectValue placeholder="지역 선택" />
+                <SelectTrigger className="border-none bg-transparent text-white shadow-none p-0 h-auto focus:ring-0">
+                  <div className="flex items-center">
+                    <SelectValue />
+                    <ChevronDown className="w-4 h-4 ml-1" />
+                  </div>
                 </SelectTrigger>
                 <SelectContent>
                   {districts.map((district) => (
@@ -83,17 +70,20 @@ const SearchForm = ({ onSearch, showAdvanced = true }: SearchFormProps) => {
               </Select>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 flex items-center">
-                <BookOpen className="w-4 h-4 mr-1" />
-                과목
-              </label>
+            {/* 구분선 */}
+            <div className="w-px h-6 bg-gray-200"></div>
+
+            {/* 과목 선택 */}
+            <div className="flex items-center px-4 py-3 min-w-[100px]">
               <Select 
                 value={filters.subject} 
                 onValueChange={(value) => handleInputChange("subject", value)}
               >
-                <SelectTrigger className="h-12">
-                  <SelectValue placeholder="과목 선택" />
+                <SelectTrigger className="border-none shadow-none p-0 h-auto focus:ring-0">
+                  <div className="flex items-center text-gray-700">
+                    <SelectValue placeholder="과목" />
+                    <ChevronDown className="w-4 h-4 ml-1" />
+                  </div>
                 </SelectTrigger>
                 <SelectContent>
                   {subjects.map((subject) => (
@@ -104,12 +94,25 @@ const SearchForm = ({ onSearch, showAdvanced = true }: SearchFormProps) => {
                 </SelectContent>
               </Select>
             </div>
-          </div>
 
-          <div className="flex justify-end">
+            {/* 구분선 */}
+            <div className="w-px h-6 bg-gray-200"></div>
+
+            {/* 검색어 입력 */}
+            <div className="flex-1 px-4">
+              <Input
+                type="text"
+                placeholder="검색어를 입력해주세요"
+                value={filters.keyword}
+                onChange={(e) => handleInputChange("keyword", e.target.value)}
+                className="border-none shadow-none focus-visible:ring-0 p-0 text-gray-500 placeholder:text-gray-400"
+              />
+            </div>
+
+            {/* 검색 버튼 */}
             <Button 
               type="submit" 
-              className="h-12 w-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-full p-0"
+              className="h-12 w-12 bg-gray-900 hover:bg-gray-800 text-white rounded-full p-0 ml-2"
             >
               <Search className="w-5 h-5" />
             </Button>
