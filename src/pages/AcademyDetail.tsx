@@ -1,11 +1,10 @@
-
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { 
-  Star, MapPin, Users, Phone, Calendar, BookOpen, 
+  Star, MapPin, Users, Calendar, BookOpen, 
   Award, Camera, Gift, ArrowLeft, MessageCircle, 
   DollarSign, Flag, Wifi, Car, Coffee, Monitor,
-  Users2, Shield, Zap, Clock
+  Users2, Shield, Zap, Clock, ImageIcon
 } from "lucide-react";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
@@ -15,6 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { mockAcademies } from "@/data/mockData";
 import TeacherDetailDialog from "@/components/TeacherDetailDialog";
 import ReportDialog from "@/components/ReportDialog";
+import TeacherSlider from "@/components/TeacherSlider";
 
 const AcademyDetail = () => {
   const { id } = useParams();
@@ -128,16 +128,8 @@ const AcademyDetail = () => {
                   <span>현재 수강생 {academy.studentCount}명</span>
                 </div>
                 <div className="flex items-center text-gray-600">
-                  <Phone className="w-5 h-5 mr-3 text-purple-600" />
-                  <span>{academy.phone}</span>
-                </div>
-                <div className="flex items-center text-gray-600">
-                  <BookOpen className="w-5 h-5 mr-3 text-orange-600" />
-                  <span>{academy.subjects.length}개 과목 운영</span>
-                </div>
-                <div className="flex items-center text-gray-600">
                   <DollarSign className="w-5 h-5 mr-3 text-emerald-600" />
-                  <span>등록비 30만원</span>
+                  <span>등록비 {academy.registrationFee?.toLocaleString() || 300000}원</span>
                 </div>
               </div>
 
@@ -154,12 +146,11 @@ const AcademyDetail = () => {
                   className="flex-1 bg-blue-600 hover:bg-blue-700"
                   onClick={() => window.open(`tel:${academy.phone}`)}
                 >
-                  <Phone className="w-4 h-4 mr-2" />
-                  전화 문의
+                  상담 신청
                 </Button>
                 <Button variant="outline" className="flex-1">
                   <MessageCircle className="w-4 h-4 mr-2" />
-                  상담 신청
+                  문의하기
                 </Button>
               </div>
             </div>
@@ -191,50 +182,7 @@ const AcademyDetail = () => {
           </TabsList>
 
           <TabsContent value="teachers">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {academy.teachers.map((teacher) => (
-                <Card key={teacher.id} className="hover:shadow-lg transition-shadow cursor-pointer">
-                  <CardContent className="p-6">
-                    <div className="flex items-start gap-4">
-                      <img 
-                        src={teacher.image} 
-                        alt={teacher.name}
-                        className="w-16 h-16 rounded-full object-cover"
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          target.src = "/placeholder.svg";
-                        }}
-                      />
-                      <div className="flex-1">
-                        <h3 className="text-xl font-bold text-gray-900 mb-1">
-                          {teacher.name} 선생님
-                        </h3>
-                        <p className="text-gray-600 mb-2">{teacher.major}</p>
-                        <div className="flex items-center text-sm text-gray-500 mb-3">
-                          <Award className="w-4 h-4 mr-1" />
-                          <span>경력 {teacher.experience}</span>
-                        </div>
-                        <div className="flex flex-wrap gap-1 mb-3">
-                          {teacher.specialties.map((specialty) => (
-                            <Badge key={specialty} variant="outline" className="text-xs">
-                              {specialty}
-                            </Badge>
-                          ))}
-                        </div>
-                        <Button 
-                          size="sm" 
-                          variant="outline"
-                          onClick={() => handleTeacherClick(teacher)}
-                          className="text-blue-600 border-blue-200 hover:bg-blue-50"
-                        >
-                          선생님 설명
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+            <TeacherSlider teachers={academy.teachers} onTeacherClick={handleTeacherClick} />
           </TabsContent>
 
           <TabsContent value="curriculum">
@@ -281,7 +229,21 @@ const AcademyDetail = () => {
                         ))}
                       </div>
                     </div>
-                    <p className="text-gray-700 leading-relaxed">{review.content}</p>
+                    <p className="text-gray-700 leading-relaxed mb-4">{review.content}</p>
+                    {/* 후기 사진 업로드 영역 */}
+                    <div className="flex items-center gap-4 pt-4 border-t border-gray-100">
+                      <div className="flex items-center text-gray-400">
+                        <ImageIcon className="w-4 h-4 mr-2" />
+                        <span className="text-sm">사진 {Math.floor(Math.random() * 3) + 1}장</span>
+                      </div>
+                      <div className="flex gap-2">
+                        {[1, 2].map((_, index) => (
+                          <div key={index} className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
+                            <ImageIcon className="w-6 h-6 text-gray-400" />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
               ))}

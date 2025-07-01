@@ -53,10 +53,7 @@ const Index = () => {
               정용준님{" "}
               <span 
                 key={currentTextIndex}
-                className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 inline-block transition-all duration-500 ease-in-out transform"
-                style={{
-                  animation: 'fadeInUp 0.5s ease-out'
-                }}
+                className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 inline-block transition-all duration-500 ease-in-out transform opacity-0 animate-fade-in"
               >
                 {rotatingTexts[currentTextIndex]}
               </span>
@@ -86,16 +83,19 @@ const Index = () => {
         </div>
       </section>
 
-      <style jsx>{`
-        @keyframes fadeInUp {
+      <style>{`
+        @keyframes fade-in {
           from {
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(10px);
           }
           to {
             opacity: 1;
             transform: translateY(0);
           }
+        }
+        .animate-fade-in {
+          animation: fade-in 0.5s ease-out forwards;
         }
       `}</style>
     </div>

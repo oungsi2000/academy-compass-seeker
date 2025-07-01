@@ -10,7 +10,7 @@ const Header = () => {
   const navItems = [
     { name: "홈", path: "/" },
     { name: "학원 찾기", path: "/academies" },
-    { name: "입시 정보", path: "/admission" },
+    { name: "어디다녀 피드", path: "/feed" },
   ];
 
   const isActive = (path: string) => {

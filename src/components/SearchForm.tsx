@@ -48,7 +48,7 @@ const SearchForm = ({ onSearch, showAdvanced = true }: SearchFormProps) => {
         <div className="bg-white rounded-full shadow-lg border border-gray-200 p-2">
           <div className="flex items-center gap-2">
             {/* 지역 선택 */}
-            <div className="flex items-center bg-gray-900 text-white px-4 py-3 rounded-full min-w-[120px]">
+            <div className="flex items-center bg-blue-600 text-white px-4 py-3 rounded-full min-w-[120px]">
               <MapPin className="w-4 h-4 mr-2" />
               <Select 
                 value={filters.district} 
@@ -112,7 +112,7 @@ const SearchForm = ({ onSearch, showAdvanced = true }: SearchFormProps) => {
             {/* 검색 버튼 */}
             <Button 
               type="submit" 
-              className="h-12 w-12 bg-gray-900 hover:bg-gray-800 text-white rounded-full p-0 ml-2"
+              className="h-12 w-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-0 ml-2"
             >
               <Search className="w-5 h-5" />
             </Button>

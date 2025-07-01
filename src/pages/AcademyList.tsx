@@ -62,6 +62,12 @@ const AcademyList = () => {
       case 'name':
         filtered.sort((a, b) => a.name.localeCompare(b.name));
         break;
+      case 'fee-high':
+        filtered.sort((a, b) => (b.registrationFee || 0) - (a.registrationFee || 0));
+        break;
+      case 'fee-low':
+        filtered.sort((a, b) => (a.registrationFee || 0) - (b.registrationFee || 0));
+        break;
     }
 
     setAcademies(filtered);
@@ -122,12 +128,14 @@ const AcademyList = () => {
             <div className="flex items-center gap-2">
               <SortAsc className="w-4 h-4 text-gray-500" />
               <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-32">
+                <SelectTrigger className="w-40">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="rating">평점 높은순</SelectItem>
                   <SelectItem value="students">수강생 많은순</SelectItem>
+                  <SelectItem value="fee-high">등록비 높은순</SelectItem>
+                  <SelectItem value="fee-low">등록비 낮은순</SelectItem>
                   <SelectItem value="name">이름순</SelectItem>
                 </SelectContent>
               </Select>
