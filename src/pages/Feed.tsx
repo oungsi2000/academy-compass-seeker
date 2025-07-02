@@ -113,7 +113,7 @@ const Feed = () => {
         <Tabs defaultValue="news" className="space-y-4">
           <TabsList className="grid w-full grid-cols-2 bg-white rounded-xl shadow-sm h-12">
             <TabsTrigger value="news" className="rounded-xl">입시 뉴스</TabsTrigger>
-            <TabsTrigger value="universities" className="rounded-xl">대학 비교</TabsTrigger>
+            <TabsTrigger value="universities" className="rounded-xl">입시 요강</TabsTrigger>
           </TabsList>
 
           {/* 입시 뉴스 탭 */}
