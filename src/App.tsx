@@ -9,6 +9,9 @@ const Index = lazy(() => import("./pages/Index"));
 const AcademyList = lazy(() => import("./pages/AcademyList"));
 const AcademyDetail = lazy(() => import("./pages/AcademyDetail"));
 const Feed = lazy(() => import("./pages/Feed"));
+const Chat = lazy(() => import("./pages/Chat"));
+const StudentResults = lazy(() => import("./pages/StudentResults"));
+const NewsDetail = lazy(() => import("./pages/NewsDetail"));
 
 const queryClient = new QueryClient();
 
@@ -47,6 +50,30 @@ const App = () => (
             element={
               <Suspense fallback={<div>Loading...</div>}>
                 <Feed />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/chat/:academyId"
+            element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <Chat />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/academy/:academyId/results"
+            element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <StudentResults />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/news/:newsId"
+            element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <NewsDetail />
               </Suspense>
             }
           />

@@ -14,13 +14,17 @@ export interface SearchFilters {
   keyword: string;
   district: string;
   subject: string;
+  type: string;
+  category: string;
 }
 
 const SearchForm = ({ onSearch, showAdvanced = true }: SearchFormProps) => {
   const [filters, setFilters] = useState<SearchFilters>({
     keyword: "",
     district: "강남구",
-    subject: ""
+    subject: "",
+    type: "",
+    category: ""
   });
 
   const districts = [
@@ -32,6 +36,9 @@ const SearchForm = ({ onSearch, showAdvanced = true }: SearchFormProps) => {
     "전체", "국어", "수학", "영어", "한국사", "사회탐구", 
     "과학탐구", "제2외국어", "논술", "면접"
   ];
+
+  const types = ["전체", "단과", "종합"];
+  const categories = ["전체", "논술", "내신", "모의고사"];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,26 +69,72 @@ const SearchForm = ({ onSearch, showAdvanced = true }: SearchFormProps) => {
               <Search className="w-5 h-5" />
             </Button>
           </div>
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3">
-            <div className="flex items-center mb-2">
-              <MapPin className="w-4 h-4 text-blue-600 mr-2" />
-              <span className="text-sm font-medium text-gray-700">지역 선택</span>
+          <div className="grid grid-cols-3 gap-2">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3">
+              <div className="flex items-center mb-2">
+                <MapPin className="w-4 h-4 text-blue-600 mr-2" />
+                <span className="text-sm font-medium text-gray-700">지역</span>
+              </div>
+              <Select 
+                value={filters.district} 
+                onValueChange={(value) => handleInputChange("district", value)}
+              >
+                <SelectTrigger className="w-full h-10 text-sm rounded-lg border focus:border-blue-500">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {districts.map((district) => (
+                    <SelectItem key={district} value={district} className="text-sm py-2">
+                      {district}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
-            <Select 
-              value={filters.district} 
-              onValueChange={(value) => handleInputChange("district", value)}
-            >
-              <SelectTrigger className="w-full h-10 text-sm rounded-lg border focus:border-blue-500">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {districts.map((district) => (
-                  <SelectItem key={district} value={district} className="text-sm py-2">
-                    {district}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3">
+              <div className="flex items-center mb-2">
+                <BookOpen className="w-4 h-4 text-blue-600 mr-2" />
+                <span className="text-sm font-medium text-gray-700">유형</span>
+              </div>
+              <Select 
+                value={filters.type} 
+                onValueChange={(value) => handleInputChange("type", value)}
+              >
+                <SelectTrigger className="w-full h-10 text-sm rounded-lg border focus:border-blue-500">
+                  <SelectValue placeholder="유형" />
+                </SelectTrigger>
+                <SelectContent>
+                  {types.map((type) => (
+                    <SelectItem key={type} value={type} className="text-sm py-2">
+                      {type}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3">
+              <div className="flex items-center mb-2">
+                <Search className="w-4 h-4 text-blue-600 mr-2" />
+                <span className="text-sm font-medium text-gray-700">카테고리</span>
+              </div>
+              <Select 
+                value={filters.category} 
+                onValueChange={(value) => handleInputChange("category", value)}
+              >
+                <SelectTrigger className="w-full h-10 text-sm rounded-lg border focus:border-blue-500">
+                  <SelectValue placeholder="카테고리" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((category) => (
+                    <SelectItem key={category} value={category} className="text-sm py-2">
+                      {category}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </form>
       </div>

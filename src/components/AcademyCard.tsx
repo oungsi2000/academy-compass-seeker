@@ -22,116 +22,93 @@ const AcademyCard = ({ academy }: AcademyCardProps) => {
     <Link to={`/academy/${academy.id}`} className="block">
       <Card className="hover:shadow-2xl transition-all duration-300 border-0 shadow-lg rounded-2xl overflow-hidden transform hover:scale-105 animate-fade-in">
         <CardContent className="p-0">
-          {/* 모바일 최적화 학원 이미지 */}
-          <div className="w-full h-48 bg-gradient-to-br from-blue-100 to-indigo-100 relative overflow-hidden">
-            <img 
-              src={academy.image} 
-              alt={academy.name}
-              className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.src = "/placeholder.svg";
-              }}
-            />
-            <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 flex items-center shadow-lg">
-              <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />
-              <span className="text-sm font-bold text-gray-900">{academy.rating}</span>
-            </div>
-          </div>
-
-          {/* 모바일 학원 정보 */}
-          <div className="p-5">
-            <h3 className="text-xl font-bold text-gray-900 mb-3 leading-tight">
-              {academy.name}
-            </h3>
-
-            <p className="text-gray-600 mb-4 text-sm leading-relaxed line-clamp-2">
-              {academy.description}
-            </p>
-
-            {/* 위치 정보 - 정확한 주소와 거리 */}
-            <div className="space-y-2 mb-3">
-              <div className="flex items-center text-gray-600">
-                <MapPin className="w-4 h-4 mr-2 text-blue-600" />
-                <span className="text-sm truncate">{academy.address}</span>
+          {/* 학원 정보와 사진 */}
+          <div className="flex">
+            <div className="flex-1 p-5">
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex gap-2">
+                  <Badge variant={academy.type === "단과" ? "default" : "secondary"} className="text-xs">
+                    {academy.type}
+                  </Badge>
+                  {academy.categories.slice(0, 2).map((category) => (
+                    <Badge key={category} variant="outline" className="text-xs">
+                      {category}
+                    </Badge>
+                  ))}
+                </div>
+                <div className="flex items-center bg-white/90 backdrop-blur-sm rounded-full px-2 py-1 shadow-sm">
+                  <Star className="w-3 h-3 fill-yellow-400 text-yellow-400 mr-1" />
+                  <span className="text-sm font-bold text-gray-900">{academy.rating}</span>
+                </div>
               </div>
-              <div className="flex items-center text-gray-500 text-xs ml-6">
-                <Target className="w-3 h-3 mr-1" />
-                <span>현재 위치에서 {distance}</span>
-              </div>
-            </div>
+              
+              <h3 className="text-lg font-bold text-gray-900 mb-2 leading-tight">
+                {academy.name}
+              </h3>
 
-            {/* 수강생 및 등록비 정보 - 범위로 표시 */}
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center text-gray-600">
-                <Users className="w-4 h-4 mr-2 text-green-600" />
-                <span className="text-sm">{academy.studentCount}명 수강 중</span>
+              <p className="text-gray-600 mb-3 text-sm leading-relaxed line-clamp-2">
+                {academy.description}
+              </p>
+
+              {/* 위치 정보 */}
+              <div className="space-y-1 mb-3">
+                <div className="flex items-center text-gray-600">
+                  <MapPin className="w-4 h-4 mr-2 text-blue-600" />
+                  <span className="text-sm truncate">{academy.location}</span>
+                </div>
+                <div className="flex items-center text-gray-500 text-xs ml-6">
+                  <Users className="w-3 h-3 mr-1 text-green-500" />
+                  <span>{academy.studentCount}명 수강 중</span>
+                </div>
               </div>
-              <div className="text-sm font-bold text-blue-600">
+
+              {/* 등록비 정보 */}
+              <div className="text-sm font-bold text-blue-600 mb-3">
                 {(academy.registrationFee - 50000).toLocaleString()}원 ~ {(academy.registrationFee + 50000).toLocaleString()}원
               </div>
-            </div>
 
-            {/* 과목 태그 + 강점 태그 */}
-            <div className="flex flex-wrap gap-1 mb-3">
-              {academy.subjects.slice(0, 2).map((subject) => (
-                <Badge key={subject} variant="secondary" className="text-xs">
-                  {subject}
-                </Badge>
-              ))}
-              {strengths.slice(0, 2).map((strength) => (
-                <Badge key={strength} variant="outline" className="text-xs border-purple-200 text-purple-700">
-                  {strength}
-                </Badge>
-              ))}
-            </div>
-
-            {/* 학원 특징 */}
-            <div className="flex flex-wrap gap-2 mb-3">
-              {features.map((feature) => (
-                <div key={feature} className="flex items-center text-xs text-gray-600 bg-gray-50 px-2 py-1 rounded-full">
-                  <Clock className="w-3 h-3 mr-1" />
-                  {feature}
-                </div>
-              ))}
-            </div>
-
-            {/* 이벤트 정보 */}
-            {academy.events.length > 0 && (
-              <div className="mb-4 p-2 bg-red-50 rounded-lg border border-red-200">
-                <div className="flex items-center text-red-600 text-xs">
-                  <Gift className="w-3 h-3 mr-1" />
-                  <span className="font-medium">{academy.events[0]}</span>
-                </div>
+              {/* 액션 버튼들 */}
+              <div className="flex justify-end gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="p-2 rounded-xl"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.open(`tel:${academy.phone}`);
+                  }}
+                >
+                  <Phone className="w-4 h-4" />
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="px-3 py-2 rounded-xl"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    // 채팅 페이지로 이동
+                    window.location.href = `/chat/${academy.id}`;
+                  }}
+                >
+                  학원 채팅으로 문의
+                </Button>
               </div>
-            )}
-
-            {/* 액션 버튼들 - 아이콘 버튼으로 변경 */}
-            <div className="flex justify-end gap-2">
-              <Button 
-                variant="outline" 
-                size="sm"
-                className="p-2 rounded-xl"
-                onClick={(e) => {
-                  e.preventDefault();
-                  window.open(`tel:${academy.phone}`);
+            </div>
+            
+            {/* 오른쪽 정사각형 사진 */}
+            <div className="w-24 h-24 m-3 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-xl overflow-hidden flex-shrink-0">
+              <img 
+                src={academy.image} 
+                alt={academy.name}
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = "/placeholder.svg";
                 }}
-              >
-                <Phone className="w-4 h-4" />
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm"
-                className="p-2 rounded-xl"
-                onClick={(e) => {
-                  e.preventDefault();
-                  // 채팅 문의 로직
-                }}
-              >
-                <MessageCircle className="w-4 h-4" />
-              </Button>
+              />
             </div>
           </div>
+
         </CardContent>
       </Card>
     </Link>

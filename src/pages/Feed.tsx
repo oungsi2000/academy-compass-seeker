@@ -27,7 +27,7 @@ const Feed = () => {
   });
   const [selectedPrograms, setSelectedPrograms] = useState<number[]>([]);
 
-  const tags = ["전체", "학습 전략", "입시 소식", "수능", "수시", "정시", "학종"];
+  const tags = ["전체", "학습 전략", "입시 소식", "수능", "수시", "정시", "학종", "논술", "내신", "모의고사"];
 
   const filteredNews = mockAdmissionNews.filter(news => {
     const matchesKeyword = !searchKeyword || 

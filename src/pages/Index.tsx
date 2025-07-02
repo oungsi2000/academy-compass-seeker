@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Header from "@/components/Header";
 import SearchForm, { SearchFilters } from "@/components/SearchForm";
 import CountUpAnimation from "@/components/CountUpAnimation";
@@ -86,7 +86,11 @@ const Index = () => {
               style={{ transform: `translateX(-${currentAcademyIndex * 100}%)` }}
             >
               {hotAcademies.map((academy, index) => (
-                <div key={academy.id} className="min-w-full bg-white p-6">
+                <Link
+                  key={academy.id}
+                  to={`/academy/${academy.id}`}
+                  className="min-w-full bg-white p-6 cursor-pointer hover:bg-gray-50 transition-colors"
+                >
                   <div className="flex items-center gap-4">
                     <img 
                       src={academy.image} 
@@ -115,7 +119,7 @@ const Index = () => {
                       </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
             
@@ -138,9 +142,10 @@ const Index = () => {
           <h2 className="text-xl font-bold text-gray-900 mb-4 px-2">📰 최근 입시 뉴스</h2>
           <div className="space-y-3">
             {mockAdmissionNews.slice(0, 3).map((news, index) => (
-              <div 
-                key={news.id} 
-                className="bg-white rounded-xl p-4 shadow-lg border border-gray-100 animate-fade-in"
+              <Link
+                key={news.id}
+                to={`/news/${news.id}`}
+                className="block bg-white rounded-xl p-4 shadow-lg border border-gray-100 animate-fade-in cursor-pointer hover:shadow-xl hover:scale-105 transition-all duration-300"
                 style={{ animationDelay: `${700 + index * 100}ms` }}
               >
                 <div className="flex items-start justify-between mb-2">
@@ -155,7 +160,7 @@ const Index = () => {
                 <p className="text-xs text-gray-600 leading-relaxed">
                   {news.summary}
                 </p>
-              </div>
+              </Link>
             ))}
           </div>
         </div>

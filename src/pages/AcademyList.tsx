@@ -18,7 +18,9 @@ const AcademyList = () => {
   const currentFilters: SearchFilters = {
     keyword: searchParams.get('keyword') || '',
     district: searchParams.get('district') || '',
-    subject: searchParams.get('subject') || ''
+    subject: searchParams.get('subject') || '',
+    type: searchParams.get('type') || '',
+    category: searchParams.get('category') || ''
   };
 
   useEffect(() => {
@@ -48,6 +50,18 @@ const AcademyList = () => {
       );
     }
 
+    if (currentFilters.type && currentFilters.type !== '전체') {
+      filtered = filtered.filter(academy => 
+        academy.type === currentFilters.type
+      );
+    }
+
+    if (currentFilters.category && currentFilters.category !== '전체') {
+      filtered = filtered.filter(academy => 
+        academy.categories.includes(currentFilters.category)
+      );
+    }
+
     switch (sortBy) {
       case 'rating':
         filtered.sort((a, b) => b.rating - a.rating);
@@ -74,6 +88,8 @@ const AcademyList = () => {
     if (filters.keyword) params.set('keyword', filters.keyword);
     if (filters.district && filters.district !== '전체') params.set('district', filters.district);
     if (filters.subject && filters.subject !== '전체') params.set('subject', filters.subject);
+    if (filters.type && filters.type !== '전체') params.set('type', filters.type);
+    if (filters.category && filters.category !== '전체') params.set('category', filters.category);
     
     setSearchParams(params);
     setShowSearch(false);
@@ -128,7 +144,7 @@ const AcademyList = () => {
         </div>
 
         {/* 활성 필터 표시 */}
-        {(currentFilters.keyword || currentFilters.district || currentFilters.subject) && (
+        {(currentFilters.keyword || currentFilters.district || currentFilters.subject || currentFilters.type || currentFilters.category) && (
           <div className="flex flex-wrap gap-2 mt-3">
             {currentFilters.keyword && (
               <span className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
@@ -143,6 +159,16 @@ const AcademyList = () => {
             {currentFilters.subject && currentFilters.subject !== '전체' && (
               <span className="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-800 text-sm rounded-full">
                 {currentFilters.subject}
+              </span>
+            )}
+            {currentFilters.type && currentFilters.type !== '전체' && (
+              <span className="inline-flex items-center px-3 py-1 bg-orange-100 text-orange-800 text-sm rounded-full">
+                {currentFilters.type}
+              </span>
+            )}
+            {currentFilters.category && currentFilters.category !== '전체' && (
+              <span className="inline-flex items-center px-3 py-1 bg-pink-100 text-pink-800 text-sm rounded-full">
+                {currentFilters.category}
               </span>
             )}
             <Button 

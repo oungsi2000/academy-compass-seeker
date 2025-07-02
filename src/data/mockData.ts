@@ -16,6 +16,8 @@ export interface Academy {
   phone: string;
   image: string;
   registrationFee: number;
+  type: "단과" | "종합";
+  categories: string[];
 }
 
 export interface Teacher {
@@ -67,6 +69,8 @@ export const mockAcademies: Academy[] = [
     district: "강남구",
     subjects: ["국어", "문학", "비문학", "문법"],
     registrationFee: 350000,
+    type: "단과",
+    categories: ["논술", "내신"],
     teachers: [
       {
         id: 1,
@@ -123,6 +127,8 @@ export const mockAcademies: Academy[] = [
     district: "서초구",
     subjects: ["수학", "수학1", "수학2", "미적분", "확률과 통계"],
     registrationFee: 400000,
+    type: "단과",
+    categories: ["모의고사", "내신"],
     teachers: [
       {
         id: 3,
@@ -164,6 +170,8 @@ export const mockAcademies: Academy[] = [
     district: "종로구",
     subjects: ["영어", "영문법", "영어독해", "영작문"],
     registrationFee: 320000,
+    type: "종합",
+    categories: ["논술", "내신", "모의고사"],
     teachers: [
       {
         id: 4,
