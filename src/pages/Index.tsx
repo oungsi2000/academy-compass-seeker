@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import SearchForm, { SearchFilters } from "@/components/SearchForm";
 import CountUpAnimation from "@/components/CountUpAnimation";
-import { mockAcademies } from "@/data/mockData";
+import { mockAcademies, mockAdmissionNews } from "@/data/mockData";
 import { Star, MapPin, Users } from "lucide-react";
 
 const Index = () => {
@@ -133,43 +133,30 @@ const Index = () => {
           </div>
         </div>
 
-        {/* 모바일 통계 카드 */}
-        <div className="grid grid-cols-2 gap-4">
-          {stats.map((stat, index) => (
-            <div 
-              key={index} 
-              className="bg-white rounded-2xl p-6 text-center shadow-lg border border-gray-100 transform hover:scale-105 transition-all duration-300 animate-fade-in"
-              style={{ animationDelay: `${600 + index * 100}ms` }}
-            >
-              <CountUpAnimation
-                end={stat.number}
-                suffix={stat.suffix}
-                className="text-2xl font-bold text-blue-600 mb-2"
-                duration={2500 + index * 200}
-              />
-              <div className="text-sm text-gray-600 font-medium">{stat.label}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* 모바일 안내 섹션 */}
-        <div className="mt-8 bg-white rounded-2xl p-6 shadow-lg animate-fade-in" style={{ animationDelay: "1000ms" }}>
-          <h3 className="text-lg font-bold text-gray-900 mb-3 text-center">
-            🎯 맞춤형 학원 찾기
-          </h3>
-          <div className="space-y-3 text-sm text-gray-600">
-            <div className="flex items-center">
-              <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
-              <span>지역별 학원 정보 제공</span>
-            </div>
-            <div className="flex items-center">
-              <div className="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
-              <span>실제 수강생 후기 확인</span>
-            </div>
-            <div className="flex items-center">
-              <div className="w-2 h-2 bg-pink-500 rounded-full mr-3"></div>
-              <span>투명한 등록비 공개</span>
-            </div>
+        {/* 최근 입시 뉴스 */}
+        <div className="mb-8 animate-fade-in" style={{ animationDelay: "600ms" }}>
+          <h2 className="text-xl font-bold text-gray-900 mb-4 px-2">📰 최근 입시 뉴스</h2>
+          <div className="space-y-3">
+            {mockAdmissionNews.slice(0, 3).map((news, index) => (
+              <div 
+                key={news.id} 
+                className="bg-white rounded-xl p-4 shadow-lg border border-gray-100 animate-fade-in"
+                style={{ animationDelay: `${700 + index * 100}ms` }}
+              >
+                <div className="flex items-start justify-between mb-2">
+                  <span className="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                    {news.category}
+                  </span>
+                  <span className="text-xs text-gray-500">{news.date}</span>
+                </div>
+                <h3 className="font-medium text-gray-900 mb-2 text-sm leading-tight">
+                  {news.title}
+                </h3>
+                <p className="text-xs text-gray-600 leading-relaxed">
+                  {news.summary}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>

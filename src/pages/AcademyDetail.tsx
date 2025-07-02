@@ -185,9 +185,12 @@ const AcademyDetail = () => {
             <div className="bg-white rounded-2xl p-6 shadow-lg">
               <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
                 <BookOpen className="w-5 h-5 mr-2 text-blue-600" />
-                학습 커리큘럼
+                학습 커리큘럼 & 일정
               </h3>
-              <div className="space-y-3">
+              
+              {/* 커리큘럼 */}
+              <div className="space-y-3 mb-6">
+                <h4 className="font-medium text-gray-800 mb-2">📚 학습 과정</h4>
                 {academy.curriculum.map((step, index) => (
                   <div key={index} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
                     <div className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold">
@@ -196,6 +199,34 @@ const AcademyDetail = () => {
                     <p className="text-gray-900 text-sm flex-1">{step}</p>
                   </div>
                 ))}
+              </div>
+
+              {/* 일정 */}
+              <div className="space-y-3">
+                <h4 className="font-medium text-gray-800 mb-2">📅 학원 일정</h4>
+                <div className="grid grid-cols-1 gap-3">
+                  <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                    <div className="flex items-center">
+                      <Calendar className="w-4 h-4 text-blue-600 mr-2" />
+                      <span className="text-sm font-medium">정규반 개강</span>
+                    </div>
+                    <span className="text-sm text-blue-600">매월 1일, 15일</span>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                    <div className="flex items-center">
+                      <Calendar className="w-4 h-4 text-green-600 mr-2" />
+                      <span className="text-sm font-medium">레벨테스트</span>
+                    </div>
+                    <span className="text-sm text-green-600">매주 토요일 14:00</span>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
+                    <div className="flex items-center">
+                      <Calendar className="w-4 h-4 text-purple-600 mr-2" />
+                      <span className="text-sm font-medium">모의고사</span>
+                    </div>
+                    <span className="text-sm text-purple-600">매월 마지막 주 토요일</span>
+                  </div>
+                </div>
               </div>
             </div>
           </TabsContent>

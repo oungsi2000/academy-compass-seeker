@@ -45,21 +45,44 @@ const SearchForm = ({ onSearch, showAdvanced = true }: SearchFormProps) => {
   if (!showAdvanced) {
     return (
       <div className="px-4">
-        <form onSubmit={handleSubmit} className="flex gap-3">
-          <Input
-            type="text"
-            placeholder="학원명이나 과목을 검색하세요"
-            value={filters.keyword}
-            onChange={(e) => handleInputChange("keyword", e.target.value)}
-            className="flex-1 h-12 text-base rounded-xl border-2 focus:border-blue-500 transition-all duration-300"
-          />
-          <Button 
-            type="submit" 
-            size="lg" 
-            className="px-4 h-12 bg-blue-600 hover:bg-blue-700 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-          >
-            <Search className="w-5 h-5" />
-          </Button>
+        <form onSubmit={handleSubmit} className="space-y-3">
+          <div className="flex gap-3">
+            <Input
+              type="text"
+              placeholder="학원명이나 과목을 검색하세요"
+              value={filters.keyword}
+              onChange={(e) => handleInputChange("keyword", e.target.value)}
+              className="flex-1 h-12 text-base rounded-xl border-2 focus:border-blue-500 transition-all duration-300"
+            />
+            <Button 
+              type="submit" 
+              size="lg" 
+              className="px-4 h-12 bg-blue-600 hover:bg-blue-700 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+            >
+              <Search className="w-5 h-5" />
+            </Button>
+          </div>
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3">
+            <div className="flex items-center mb-2">
+              <MapPin className="w-4 h-4 text-blue-600 mr-2" />
+              <span className="text-sm font-medium text-gray-700">지역 선택</span>
+            </div>
+            <Select 
+              value={filters.district} 
+              onValueChange={(value) => handleInputChange("district", value)}
+            >
+              <SelectTrigger className="w-full h-10 text-sm rounded-lg border focus:border-blue-500">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {districts.map((district) => (
+                  <SelectItem key={district} value={district} className="text-sm py-2">
+                    {district}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </form>
       </div>
     );

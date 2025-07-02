@@ -16,18 +16,30 @@ import { mockAdmissionNews, mockUniversityInfo, studyStrategies } from "@/data/m
 const AdmissionInfo = () => {
   const [newsFilter, setNewsFilter] = useState("전체");
   const [universityFilter, setUniversityFilter] = useState({
-    type: "전체",
-    region: "전체"
+    university: "",
+    department: "",
+    sortBy: "grade-low"
   });
 
   const filteredNews = mockAdmissionNews.filter(news => 
     newsFilter === "전체" || news.category === newsFilter
   );
 
-  const filteredUniversities = mockUniversityInfo.filter(uni => 
-    (universityFilter.type === "전체" || uni.type === universityFilter.type) &&
-    (universityFilter.region === "전체" || uni.region === universityFilter.region)
-  );
+  const filteredUniversities = mockUniversityInfo
+    .filter(uni => 
+      (!universityFilter.university || uni.university.includes(universityFilter.university)) &&
+      (!universityFilter.department || uni.department.includes(universityFilter.department))
+    )
+    .sort((a, b) => {
+      switch(universityFilter.sortBy) {
+        case 'grade-low': return a.expectedGrade.average - b.expectedGrade.average;
+        case 'grade-high': return b.expectedGrade.average - a.expectedGrade.average;
+        case 'quota': return b.quota - a.quota;
+        case 'suji': return a.type.includes('수시') ? -1 : 1;
+        case 'jeongsi': return a.type.includes('정시') ? -1 : 1;
+        default: return 0;
+      }
+    });
 
   const newsCategories = ["전체", "수능", "수시", "정시", "학종"];
   const admissionTypes = ["전체", "수시", "정시"];
@@ -116,93 +128,108 @@ const AdmissionInfo = () => {
                   대학 모집요강
                 </h2>
                 
-                <div className="flex flex-col sm:flex-row gap-2">
+                <div className="flex flex-wrap gap-2">
+                  <Input 
+                    placeholder="대학 검색..." 
+                    className="w-40"
+                    value={universityFilter.university || ''}
+                    onChange={(e) => setUniversityFilter(prev => ({...prev, university: e.target.value}))}
+                  />
+                  <Input 
+                    placeholder="학과 검색..." 
+                    className="w-40"
+                    value={universityFilter.department || ''}
+                    onChange={(e) => setUniversityFilter(prev => ({...prev, department: e.target.value}))}
+                  />
                   <Select 
-                    value={universityFilter.type} 
-                    onValueChange={(value) => setUniversityFilter(prev => ({...prev, type: value}))}
+                    value={universityFilter.sortBy || 'grade-low'} 
+                    onValueChange={(value) => setUniversityFilter(prev => ({...prev, sortBy: value}))}
                   >
-                    <SelectTrigger className="w-32">
-                      <SelectValue placeholder="전형 유형" />
+                    <SelectTrigger className="w-40">
+                      <SelectValue placeholder="정렬" />
                     </SelectTrigger>
                     <SelectContent>
-                      {admissionTypes.map(type => (
-                        <SelectItem key={type} value={type}>
-                          {type}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  
-                  <Select 
-                    value={universityFilter.region} 
-                    onValueChange={(value) => setUniversityFilter(prev => ({...prev, region: value}))}
-                  >
-                    <SelectTrigger className="w-32">
-                      <SelectValue placeholder="지역" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {regions.map(region => (
-                        <SelectItem key={region} value={region}>
-                          {region}
-                        </SelectItem>
-                      ))}
+                      <SelectItem value="grade-low">평균 등급 낮은순</SelectItem>
+                      <SelectItem value="grade-high">평균 등급 높은순</SelectItem>
+                      <SelectItem value="quota">모집인원순</SelectItem>
+                      <SelectItem value="suji">수시</SelectItem>
+                      <SelectItem value="jeongsi">정시</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
 
-              <div className="overflow-x-auto">
-                <div className="min-w-full">
-                  <div className="grid grid-cols-1 gap-4">
-                    {filteredUniversities.map((uni) => (
-                      <Card key={uni.id}>
-                        <CardContent className="p-6">
-                          <div className="flex flex-col lg:flex-row lg:items-center gap-4">
-                            <div className="flex-1">
-                              <div className="flex items-center gap-3 mb-2">
-                                <h3 className="text-xl font-bold text-gray-900">
-                                  {uni.university}
-                                </h3>
-                                <Badge variant={uni.type === "수시" ? "default" : "secondary"}>
-                                  {uni.type}
-                                </Badge>
-                                <Badge variant="outline">{uni.region}</Badge>
-                              </div>
-                              
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
-                                <div className="flex items-center">
-                                  <Calendar className="w-4 h-4 mr-2 text-blue-600" />
-                                  <span>모집기간: {uni.period}</span>
-                                </div>
-                                <div className="flex items-center">
-                                  <Target className="w-4 h-4 mr-2 text-green-600" />
-                                  <span>모집인원: {uni.quota}명</span>
-                                </div>
-                              </div>
-                              
-                              <div className="mt-3">
-                                <p className="text-sm text-gray-500 mb-2">전형요소:</p>
-                                <div className="flex flex-wrap gap-1">
-                                  {uni.requirements.map((req, index) => (
-                                    <Badge key={index} variant="outline" className="text-xs">
-                                      {req}
-                                    </Badge>
-                                  ))}
-                                </div>
-                              </div>
+              <div className="grid grid-cols-1 gap-4">
+                {filteredUniversities.map((uni) => (
+                  <Card key={uni.id} className="hover:shadow-lg transition-shadow">
+                    <CardContent className="p-6">
+                      <div className="space-y-4">
+                        {/* 헤더 */}
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <div className="flex items-center gap-2 mb-1">
+                              <h3 className="text-lg font-bold text-gray-900">
+                                {uni.university}
+                              </h3>
+                              <Badge variant="secondary">{uni.department}</Badge>
                             </div>
-                            
-                            <div className="lg:w-auto">
-                              <Button size="sm" variant="outline">
-                                상세보기
-                              </Button>
+                            <Badge variant={uni.type.includes("종합") ? "default" : "outline"}>
+                              {uni.type}
+                            </Badge>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-lg font-bold text-blue-600">
+                              {uni.quota}명
+                            </div>
+                            <div className="text-xs text-gray-500">모집인원</div>
+                          </div>
+                        </div>
+
+                        {/* 등급 정보 */}
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="bg-blue-50 p-3 rounded-lg">
+                            <h4 className="font-medium text-blue-900 mb-2">예상 합격 등급</h4>
+                            <div className="text-sm space-y-1">
+                              <div>평균: <span className="font-bold">{uni.expectedGrade.average}등급</span></div>
+                              <div>최소: {uni.expectedGrade.min}등급 / 최고: {uni.expectedGrade.max}등급</div>
                             </div>
                           </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                </div>
+                          <div className="bg-green-50 p-3 rounded-lg">
+                            <h4 className="font-medium text-green-900 mb-2">작년 합격 등급</h4>
+                            <div className="text-sm space-y-1">
+                              <div>평균: <span className="font-bold">{uni.lastYearGrade.average}등급</span></div>
+                              <div>최소: {uni.lastYearGrade.min}등급 / 최고: {uni.lastYearGrade.max}등급</div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* 심사 요소 */}
+                        <div>
+                          <h4 className="font-medium text-gray-900 mb-2">심사 요소</h4>
+                          <div className="flex flex-wrap gap-2">
+                            {Object.entries(uni.examElements).map(([subject, percentage]) => (
+                              <Badge key={subject} variant="outline" className="text-xs">
+                                {subject} {percentage}%
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* 기본 정보 */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600 pt-2 border-t">
+                          <div className="flex items-center">
+                            <Calendar className="w-4 h-4 mr-2 text-blue-600" />
+                            <span>모집기간: {uni.period}</span>
+                          </div>
+                          <div className="flex items-center">
+                            <Target className="w-4 h-4 mr-2 text-green-600" />
+                            <span>지역: {uni.region}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
               </div>
             </div>
           </TabsContent>

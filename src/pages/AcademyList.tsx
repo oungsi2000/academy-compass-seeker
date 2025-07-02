@@ -95,13 +95,16 @@ const AcademyList = () => {
             <span className="font-medium">돌아가기</span>
           </Link>
           
-          <Button
-            onClick={() => setShowSearch(!showSearch)}
-            className="bg-blue-600 hover:bg-blue-700 rounded-xl px-4 py-2 shadow-lg"
-          >
-            <Filter className="w-4 h-4 mr-2" />
-            검색
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              onClick={clearFilters}
+              variant="outline"
+              className="rounded-xl px-3 py-2"
+            >
+              <Filter className="w-4 h-4 mr-1" />
+              초기화
+            </Button>
+          </div>
         </div>
 
         <div className="flex items-center justify-between">
@@ -154,14 +157,12 @@ const AcademyList = () => {
         )}
       </div>
 
-      {/* 모바일 검색 폼 */}
-      {showSearch && (
-        <div className="bg-white border-b shadow-lg animate-slide-down">
-          <div className="py-4">
-            <SearchForm onSearch={handleSearch} showAdvanced={false} />
-          </div>
+      {/* 모바일 검색 폼 - 항상 표시 */}
+      <div className="bg-white border-b shadow-sm">
+        <div className="py-4">
+          <SearchForm onSearch={handleSearch} showAdvanced={false} />
         </div>
-      )}
+      </div>
 
       {/* 모바일 학원 리스트 */}
       <div className="px-4 py-4">

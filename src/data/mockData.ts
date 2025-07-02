@@ -46,11 +46,15 @@ export interface AdmissionNews {
 export interface UniversityInfo {
   id: number;
   university: string;
+  department: string;
   type: string;
   period: string;
   region: string;
   quota: number;
   requirements: string[];
+  examElements: { [key: string]: number };
+  expectedGrade: { average: number; min: number; max: number };
+  lastYearGrade: { average: number; min: number; max: number };
 }
 
 export const mockAcademies: Academy[] = [
@@ -222,29 +226,67 @@ export const mockUniversityInfo: UniversityInfo[] = [
   {
     id: 1,
     university: "서울대학교",
-    type: "수시",
+    department: "경영학과",
+    type: "학생부종합전형",
     period: "2024.09.09 ~ 2024.09.12",
     region: "서울",
-    quota: 2024,
-    requirements: ["학생부종합", "지역균형선발", "기회균형선발"]
+    quota: 50,
+    requirements: ["학생부종합", "면접"],
+    examElements: { "국어": 25, "수학": 35, "영어": 25, "탐구": 15 },
+    expectedGrade: { average: 1.2, min: 1.0, max: 1.8 },
+    lastYearGrade: { average: 1.1, min: 1.0, max: 1.5 }
   },
   {
     id: 2,
-    university: "연세대학교",
-    type: "수시",
-    period: "2024.09.06 ~ 2024.09.10",
+    university: "서울대학교",
+    department: "경영학과",
+    type: "지역균형선발전형",
+    period: "2024.09.09 ~ 2024.09.12",
     region: "서울",
-    quota: 1805,
-    requirements: ["학생부종합", "논술", "특기자"]
+    quota: 15,
+    requirements: ["학생부종합", "면접"],
+    examElements: { "국어": 30, "수학": 40, "영어": 20, "탐구": 10 },
+    expectedGrade: { average: 1.5, min: 1.2, max: 2.0 },
+    lastYearGrade: { average: 1.3, min: 1.1, max: 1.8 }
   },
   {
     id: 3,
-    university: "고려대학교",
-    type: "수시",
+    university: "연세대학교",
+    department: "경영학과",
+    type: "학생부종합전형",
     period: "2024.09.06 ~ 2024.09.10",
     region: "서울",
-    quota: 2445,
-    requirements: ["학생부종합", "학생부교과", "논술"]
+    quota: 80,
+    requirements: ["학생부종합", "면접"],
+    examElements: { "국어": 30, "수학": 30, "영어": 25, "탐구": 15 },
+    expectedGrade: { average: 1.8, min: 1.4, max: 2.5 },
+    lastYearGrade: { average: 1.6, min: 1.3, max: 2.2 }
+  },
+  {
+    id: 4,
+    university: "연세대학교",
+    department: "경영학과",
+    type: "논술전형",
+    period: "2024.09.06 ~ 2024.09.10",
+    region: "서울",
+    quota: 30,
+    requirements: ["논술", "학생부교과"],
+    examElements: { "논술": 60, "학생부": 40 },
+    expectedGrade: { average: 2.0, min: 1.5, max: 2.8 },
+    lastYearGrade: { average: 1.9, min: 1.4, max: 2.5 }
+  },
+  {
+    id: 5,
+    university: "고려대학교",
+    department: "경영학과",
+    type: "학생부종합전형",
+    period: "2024.09.06 ~ 2024.09.10",
+    region: "서울",
+    quota: 100,
+    requirements: ["학생부종합", "면접"],
+    examElements: { "국어": 25, "수학": 35, "영어": 25, "탐구": 15 },
+    expectedGrade: { average: 2.2, min: 1.8, max: 3.0 },
+    lastYearGrade: { average: 2.0, min: 1.6, max: 2.8 }
   }
 ];
 
