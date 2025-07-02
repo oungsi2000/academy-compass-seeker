@@ -290,6 +290,93 @@ export const mockUniversityInfo: UniversityInfo[] = [
   }
 ];
 
+export const mockUniversityProgramInfo = [
+  {
+    id: 1,
+    university: "서울대학교",
+    department: "경영학과",
+    program: "학생부종합전형",
+    type: "수시",
+    quota: 25,
+    expectedGrade: { average: 1.2, min: 1.0, max: 1.5 },
+    lastYearGrade: { average: 1.3, min: 1.1, max: 1.6 },
+    examElements: { "국어": 20, "수학": 30, "영어": 20, "탐구": 20, "기타": 10 },
+    period: "2024.09.09 - 2024.09.13",
+    region: "서울",
+    requirements: ["학생부", "자기소개서", "면접"]
+  },
+  {
+    id: 2,
+    university: "연세대학교",
+    department: "경제학과",
+    program: "활동우수형",
+    type: "수시",
+    quota: 30,
+    expectedGrade: { average: 1.4, min: 1.2, max: 1.7 },
+    lastYearGrade: { average: 1.5, min: 1.3, max: 1.8 },
+    examElements: { "국어": 25, "수학": 25, "영어": 25, "탐구": 20, "기타": 5 },
+    period: "2024.09.11 - 2024.09.15",
+    region: "서울",
+    requirements: ["학생부", "자기소개서", "추천서"]
+  },
+  {
+    id: 3,
+    university: "고려대학교",
+    department: "법학과",
+    program: "일반전형",
+    type: "정시",
+    quota: 40,
+    expectedGrade: { average: 1.6, min: 1.3, max: 2.0 },
+    lastYearGrade: { average: 1.7, min: 1.4, max: 2.1 },
+    examElements: { "국어": 30, "수학": 30, "영어": 20, "탐구": 20 },
+    period: "2024.12.23 - 2024.12.28",
+    region: "서울",
+    requirements: ["수능", "학생부"]
+  },
+  {
+    id: 4,
+    university: "성균관대학교",
+    department: "컴퓨터공학과",
+    program: "성균인재전형",
+    type: "수시",
+    quota: 35,
+    expectedGrade: { average: 1.8, min: 1.5, max: 2.2 },
+    lastYearGrade: { average: 1.9, min: 1.6, max: 2.3 },
+    examElements: { "국어": 15, "수학": 40, "영어": 20, "탐구": 20, "기타": 5 },
+    period: "2024.09.06 - 2024.09.10",
+    region: "서울",
+    requirements: ["학생부", "자기소개서", "면접"]
+  },
+  {
+    id: 5,
+    university: "서울대학교",
+    department: "컴퓨터공학과",
+    program: "일반전형",
+    type: "정시",
+    quota: 20,
+    expectedGrade: { average: 1.1, min: 1.0, max: 1.3 },
+    lastYearGrade: { average: 1.2, min: 1.0, max: 1.4 },
+    examElements: { "국어": 20, "수학": 35, "영어": 20, "탐구": 25 },
+    period: "2024.12.23 - 2024.12.28",
+    region: "서울",
+    requirements: ["수능"]
+  },
+  {
+    id: 6,
+    university: "연세대학교",
+    department: "의예과",
+    program: "학생부종합전형",
+    type: "수시",
+    quota: 15,
+    expectedGrade: { average: 1.0, min: 1.0, max: 1.2 },
+    lastYearGrade: { average: 1.1, min: 1.0, max: 1.3 },
+    examElements: { "국어": 25, "수학": 30, "영어": 25, "탐구": 20 },
+    period: "2024.09.09 - 2024.09.13",
+    region: "서울",
+    requirements: ["학생부", "자기소개서", "면접"]
+  }
+];
+
 export const studyStrategies = {
   국어: [
     "문학: 작품별 주제 의식과 화자의 정서 파악",

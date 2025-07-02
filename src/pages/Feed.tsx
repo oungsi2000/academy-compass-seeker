@@ -12,16 +12,18 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { mockAdmissionNews, mockUniversityInfo } from "@/data/mockData";
+import { mockAdmissionNews, mockUniversityProgramInfo } from "@/data/mockData";
 
 const Feed = () => {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [selectedTag, setSelectedTag] = useState("전체");
   const [universityFilter, setUniversityFilter] = useState({
-    type: "전체",
-    region: "전체"
+    university: "",
+    department: "",
+    sortBy: "grade-low",
+    type: "전체"
   });
-  const [selectedUniversities, setSelectedUniversities] = useState<number[]>([]);
+  const [selectedPrograms, setSelectedPrograms] = useState<number[]>([]);
 
   const tags = ["전체", "학습 전략", "입시 소식", "수능", "수시", "정시", "학종"];
 
@@ -33,13 +35,23 @@ const Feed = () => {
     return matchesKeyword && matchesTag;
   });
 
-  const filteredUniversities = mockUniversityInfo.filter(uni => 
-    (universityFilter.type === "전체" || uni.type === universityFilter.type) &&
-    (universityFilter.region === "전체" || uni.region === universityFilter.region)
-  );
+  const filteredPrograms = mockUniversityProgramInfo
+    .filter(program => 
+      (!universityFilter.university || program.university.includes(universityFilter.university)) &&
+      (!universityFilter.department || program.department.includes(universityFilter.department)) &&
+      (universityFilter.type === "전체" || program.type === universityFilter.type)
+    )
+    .sort((a, b) => {
+      switch(universityFilter.sortBy) {
+        case 'grade-low': return a.expectedGrade.average - b.expectedGrade.average;
+        case 'grade-high': return b.expectedGrade.average - a.expectedGrade.average;
+        case 'quota': return b.quota - a.quota;
+        default: return 0;
+      }
+    });
 
-  const toggleUniversitySelection = (id: number) => {
-    setSelectedUniversities(prev => 
+  const toggleProgramSelection = (id: number) => {
+    setSelectedPrograms(prev => 
       prev.includes(id) 
         ? prev.filter(u => u !== id)
         : [...prev, id]
@@ -176,12 +188,37 @@ const Feed = () => {
           <TabsContent value="universities">
             {/* 모바일 필터 */}
             <div className="bg-white rounded-2xl p-4 shadow-sm mb-4 space-y-3 animate-fade-in">
+              <Input 
+                placeholder="대학 검색..." 
+                value={universityFilter.university || ''}
+                onChange={(e) => setUniversityFilter(prev => ({...prev, university: e.target.value}))}
+                className="h-12 rounded-xl border-2 focus:border-blue-500"
+              />
+              <Input 
+                placeholder="학과 검색..." 
+                value={universityFilter.department || ''}
+                onChange={(e) => setUniversityFilter(prev => ({...prev, department: e.target.value}))}
+                className="h-12 rounded-xl border-2 focus:border-blue-500"
+              />
+              <Select 
+                value={universityFilter.sortBy || 'grade-low'} 
+                onValueChange={(value) => setUniversityFilter(prev => ({...prev, sortBy: value}))}
+              >
+                <SelectTrigger className="w-full h-12 rounded-xl border-2 focus:border-blue-500">
+                  <SelectValue placeholder="정렬" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="grade-low">평균 등급 낮은순</SelectItem>
+                  <SelectItem value="grade-high">평균 등급 높은순</SelectItem>
+                  <SelectItem value="quota">모집인원순</SelectItem>
+                </SelectContent>
+              </Select>
               <Select 
                 value={universityFilter.type} 
                 onValueChange={(value) => setUniversityFilter(prev => ({...prev, type: value}))}
               >
                 <SelectTrigger className="w-full h-12 rounded-xl border-2 focus:border-blue-500">
-                  <SelectValue placeholder="전형 유형" />
+                  <SelectValue placeholder="지원 전형" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="전체">전체</SelectItem>
@@ -189,54 +226,41 @@ const Feed = () => {
                   <SelectItem value="정시">정시</SelectItem>
                 </SelectContent>
               </Select>
-              
-              <Select 
-                value={universityFilter.region} 
-                onValueChange={(value) => setUniversityFilter(prev => ({...prev, region: value}))}
-              >
-                <SelectTrigger className="w-full h-12 rounded-xl border-2 focus:border-blue-500">
-                  <SelectValue placeholder="지역" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="전체">전체</SelectItem>
-                  <SelectItem value="서울">서울</SelectItem>
-                  <SelectItem value="경기">경기</SelectItem>
-                  <SelectItem value="인천">인천</SelectItem>
-                </SelectContent>
-              </Select>
             </div>
 
-            {/* 선택된 대학 비교 */}
-            {selectedUniversities.length > 0 && (
+            {/* 선택된 전형 비교 */}
+            {selectedPrograms.length > 0 && (
               <Card className="bg-blue-50 border-blue-200 rounded-2xl mb-4 animate-fade-in">
                 <CardHeader>
                   <CardTitle className="text-blue-900 text-lg">
-                    선택된 대학 비교 ({selectedUniversities.length}개)
+                    선택된 전형 비교 ({selectedPrograms.length}개)
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    {selectedUniversities.map(id => {
-                      const uni = mockUniversityInfo.find(u => u.id === id);
-                      if (!uni) return null;
+                    {selectedPrograms.map(id => {
+                      const program = mockUniversityProgramInfo.find(u => u.id === id);
+                      if (!program) return null;
                       return (
                         <div key={id} className="bg-white p-4 rounded-xl border">
                           <div className="flex items-center justify-between mb-2">
-                            <h4 className="font-bold text-gray-900">{uni.university}</h4>
+                            <h4 className="font-bold text-gray-900">
+                              {program.university} - {program.department} - {program.program}
+                            </h4>
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => toggleUniversitySelection(id)}
+                              onClick={() => toggleProgramSelection(id)}
                               className="text-red-600 border-red-200 hover:bg-red-50"
                             >
                               제거
                             </Button>
                           </div>
                           <div className="grid grid-cols-2 gap-2 text-sm text-gray-600">
-                            <div>전형: {uni.type}</div>
-                            <div>지역: {uni.region}</div>
-                            <div>인원: {uni.quota}명</div>
-                            <div>기간: {uni.period}</div>
+                            <div>전형: {program.type} {program.program}</div>
+                            <div>예상등급: {program.expectedGrade.average}등급</div>
+                            <div>인원: {program.quota}명</div>
+                            <div>기간: {program.period}</div>
                           </div>
                         </div>
                       );
@@ -246,11 +270,11 @@ const Feed = () => {
               </Card>
             )}
 
-            {/* 모바일 대학 리스트 */}
+            {/* 모바일 전형 리스트 */}
             <div className="space-y-4">
-              {filteredUniversities.map((uni, index) => (
+              {filteredPrograms.map((program, index) => (
                 <Card 
-                  key={uni.id} 
+                  key={program.id} 
                   className="rounded-2xl animate-fade-in"
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
@@ -258,47 +282,62 @@ const Feed = () => {
                     <div className="flex items-start justify-between mb-3">
                       <div>
                         <h3 className="text-lg font-bold text-gray-900 mb-1">
-                          {uni.university}
+                          {program.university} - {program.department}
                         </h3>
                         <div className="flex gap-2 mb-2">
-                          <Badge variant={uni.type === "수시" ? "default" : "secondary"}>
-                            {uni.type}
+                          <Badge variant={program.type === "수시" ? "default" : "secondary"}>
+                            {program.type} {program.program}
                           </Badge>
-                          <Badge variant="outline">{uni.region}</Badge>
+                          <Badge variant="outline">{program.quota}명</Badge>
                         </div>
+                      </div>
+                    </div>
+                    
+                    {/* 등급 정보 */}
+                    <div className="grid grid-cols-2 gap-3 mb-4">
+                      <div className="bg-blue-50 p-3 rounded-lg">
+                        <h4 className="font-medium text-blue-900 mb-1 text-sm">예상 합격 등급</h4>
+                        <div className="text-xs space-y-1">
+                          <div>평균: <span className="font-bold">{program.expectedGrade.average}등급</span></div>
+                          <div>{program.expectedGrade.min}~{program.expectedGrade.max}등급</div>
+                        </div>
+                      </div>
+                      <div className="bg-green-50 p-3 rounded-lg">
+                        <h4 className="font-medium text-green-900 mb-1 text-sm">작년 합격 등급</h4>
+                        <div className="text-xs space-y-1">
+                          <div>평균: <span className="font-bold">{program.lastYearGrade.average}등급</span></div>
+                          <div>{program.lastYearGrade.min}~{program.lastYearGrade.max}등급</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 심사 과목 비율 */}
+                    <div className="mb-4">
+                      <h4 className="font-medium text-gray-900 mb-2 text-sm">심사 과목 비율</h4>
+                      <div className="flex flex-wrap gap-1">
+                        {Object.entries(program.examElements).map(([subject, percentage]) => (
+                          <Badge key={subject} variant="outline" className="text-xs">
+                            {subject} {percentage as number}%
+                          </Badge>
+                        ))}
                       </div>
                     </div>
                     
                     <div className="space-y-2 text-sm text-gray-600 mb-4">
                       <div className="flex items-center">
                         <Calendar className="w-4 h-4 mr-2 text-blue-600" />
-                        <span>기간: {uni.period}</span>
-                      </div>
-                      <div className="flex items-center">
-                        <Target className="w-4 h-4 mr-2 text-green-600" />
-                        <span>인원: {uni.quota}명</span>
-                      </div>
-                    </div>
-                    
-                    <div className="mb-4">
-                      <p className="text-sm text-gray-500 mb-2">전형요소:</p>
-                      <div className="flex flex-wrap gap-1">
-                        {uni.requirements.map((req, index) => (
-                          <Badge key={index} variant="outline" className="text-xs">
-                            {req}
-                          </Badge>
-                        ))}
+                        <span>기간: {program.period}</span>
                       </div>
                     </div>
                     
                     <div className="flex gap-2">
                       <Button
                         size="sm"
-                        variant={selectedUniversities.includes(uni.id) ? "default" : "outline"}
-                        onClick={() => toggleUniversitySelection(uni.id)}
+                        variant={selectedPrograms.includes(program.id) ? "default" : "outline"}
+                        onClick={() => toggleProgramSelection(program.id)}
                         className="flex-1 rounded-xl"
                       >
-                        {selectedUniversities.includes(uni.id) ? "선택됨" : "비교 추가"}
+                        {selectedPrograms.includes(program.id) ? "선택됨" : "비교 추가"}
                       </Button>
                       <Button size="sm" variant="outline" className="rounded-xl">
                         상세보기
