@@ -21,7 +21,9 @@ const Feed = () => {
     university: "",
     department: "",
     sortBy: "grade-low",
-    type: "전체"
+    type: "전체",
+    minGrade: "",
+    maxGrade: ""
   });
   const [selectedPrograms, setSelectedPrograms] = useState<number[]>([]);
 
@@ -36,11 +38,17 @@ const Feed = () => {
   });
 
   const filteredPrograms = mockUniversityProgramInfo
-    .filter(program => 
-      (!universityFilter.university || program.university.includes(universityFilter.university)) &&
-      (!universityFilter.department || program.department.includes(universityFilter.department)) &&
-      (universityFilter.type === "전체" || program.type === universityFilter.type)
-    )
+    .filter(program => {
+      const matchesUniversity = !universityFilter.university || program.university.includes(universityFilter.university);
+      const matchesDepartment = !universityFilter.department || program.department.includes(universityFilter.department);
+      const matchesType = universityFilter.type === "전체" || program.type === universityFilter.type;
+      
+      // 등급 범위 필터링
+      const matchesGradeRange = (!universityFilter.minGrade || program.expectedGrade.average >= parseFloat(universityFilter.minGrade)) &&
+                               (!universityFilter.maxGrade || program.expectedGrade.average <= parseFloat(universityFilter.maxGrade));
+      
+      return matchesUniversity && matchesDepartment && matchesType && matchesGradeRange;
+    })
     .sort((a, b) => {
       switch(universityFilter.sortBy) {
         case 'grade-low': return a.expectedGrade.average - b.expectedGrade.average;
@@ -226,6 +234,30 @@ const Feed = () => {
                   <SelectItem value="정시">정시</SelectItem>
                 </SelectContent>
               </Select>
+              
+              {/* 등급 범위 필터 */}
+              <div className="grid grid-cols-2 gap-3">
+                <Input 
+                  placeholder="최소 등급" 
+                  value={universityFilter.minGrade || ''}
+                  onChange={(e) => setUniversityFilter(prev => ({...prev, minGrade: e.target.value}))}
+                  className="h-12 rounded-xl border-2 focus:border-blue-500"
+                  type="number"
+                  min="1"
+                  max="9"
+                  step="0.1"
+                />
+                <Input 
+                  placeholder="최대 등급" 
+                  value={universityFilter.maxGrade || ''}
+                  onChange={(e) => setUniversityFilter(prev => ({...prev, maxGrade: e.target.value}))}
+                  className="h-12 rounded-xl border-2 focus:border-blue-500"
+                  type="number"
+                  min="1"
+                  max="9"
+                  step="0.1"
+                />
+              </div>
             </div>
 
             {/* 선택된 전형 비교 */}
