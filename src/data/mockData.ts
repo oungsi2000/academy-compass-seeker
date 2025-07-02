@@ -1,4 +1,3 @@
-
 export interface Academy {
   id: number;
   name: string;
@@ -16,6 +15,7 @@ export interface Academy {
   events: string[];
   phone: string;
   image: string;
+  registrationFee: number;
 }
 
 export interface Teacher {
@@ -62,6 +62,7 @@ export const mockAcademies: Academy[] = [
     location: "강남구 역삼동",
     district: "강남구",
     subjects: ["국어", "문학", "비문학", "문법"],
+    registrationFee: 350000,
     teachers: [
       {
         id: 1,
@@ -117,6 +118,7 @@ export const mockAcademies: Academy[] = [
     location: "서초구 서초동",
     district: "서초구",
     subjects: ["수학", "수학1", "수학2", "미적분", "확률과 통계"],
+    registrationFee: 400000,
     teachers: [
       {
         id: 3,
@@ -157,6 +159,7 @@ export const mockAcademies: Academy[] = [
     location: "종로구 종로1가",
     district: "종로구",
     subjects: ["영어", "영문법", "영어독해", "영작문"],
+    registrationFee: 320000,
     teachers: [
       {
         id: 4,

@@ -1,4 +1,3 @@
-
 import { MapPin, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -23,7 +22,6 @@ const Header = () => {
     <header className="bg-white shadow-lg border-b sticky top-0 z-50 animate-slide-down">
       <div className="px-4 py-3">
         <div className="flex justify-between items-center">
-          {/* 모바일 최적화 로고 */}
           <Link to="/" className="flex items-center space-x-2 animate-fade-in">
             <div className="w-10 h-10 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-xl flex items-center justify-center relative overflow-hidden shadow-lg">
               <MapPin className="w-5 h-5 text-white" />
@@ -34,7 +32,6 @@ const Header = () => {
             </span>
           </Link>
 
-          {/* 모바일 메뉴 버튼 */}
           <button
             className="p-3 rounded-xl text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-all duration-300 transform hover:scale-110"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -47,18 +44,18 @@ const Header = () => {
           </button>
         </div>
 
-        {/* 모바일 전체화면 메뉴 */}
+        {/* 모바일 전체화면 메뉴 - 배경색 추가 */}
         {isMenuOpen && (
           <div className="fixed inset-0 top-16 bg-white z-40 animate-slide-in-right">
-            <nav className="flex flex-col h-full pt-8">
+            <nav className="flex flex-col h-full pt-8 bg-gradient-to-br from-blue-50 to-purple-50">
               {navItems.map((item, index) => (
                 <Link
                   key={item.name}
                   to={item.path}
                   className={`px-6 py-6 text-lg font-medium transition-all duration-300 border-b border-gray-100 ${
                     isActive(item.path)
-                      ? "text-blue-600 bg-blue-50 border-l-4 border-l-blue-600"
-                      : "text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                      ? "text-blue-600 bg-white/80 border-l-4 border-l-blue-600 shadow-lg"
+                      : "text-gray-700 hover:text-blue-600 hover:bg-white/60"
                   }`}
                   style={{ animationDelay: `${index * 100}ms` }}
                   onClick={() => setIsMenuOpen(false)}

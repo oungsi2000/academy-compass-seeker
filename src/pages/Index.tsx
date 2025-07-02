@@ -4,10 +4,13 @@ import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import SearchForm, { SearchFilters } from "@/components/SearchForm";
 import CountUpAnimation from "@/components/CountUpAnimation";
+import { mockAcademies } from "@/data/mockData";
+import { Star, MapPin, Users } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
+  const [currentAcademyIndex, setCurrentAcademyIndex] = useState(0);
   
   const rotatingTexts = [
     "국어학원",
@@ -16,12 +19,22 @@ const Index = () => {
     "입시 칼럼"
   ];
 
+  // 핫한 학원들 (상위 3개)
+  const hotAcademies = mockAcademies.slice(0, 3);
+
   useEffect(() => {
-    const interval = setInterval(() => {
+    const textInterval = setInterval(() => {
       setCurrentTextIndex((prev) => (prev + 1) % rotatingTexts.length);
     }, 1000);
 
-    return () => clearInterval(interval);
+    const academyInterval = setInterval(() => {
+      setCurrentAcademyIndex((prev) => (prev + 1) % hotAcademies.length);
+    }, 2000);
+
+    return () => {
+      clearInterval(textInterval);
+      clearInterval(academyInterval);
+    };
   }, []);
 
   const handleSearch = (filters: SearchFilters) => {
@@ -59,9 +72,65 @@ const Index = () => {
           </h1>
         </div>
 
-        {/* 모바일 검색 폼 */}
+        {/* 단일 검색바 */}
         <div className="mb-8 animate-slide-up" style={{ animationDelay: "300ms" }}>
-          <SearchForm onSearch={handleSearch} />
+          <SearchForm onSearch={handleSearch} showAdvanced={false} />
+        </div>
+
+        {/* 핫한 학원 슬라이더 */}
+        <div className="mb-8 animate-fade-in" style={{ animationDelay: "400ms" }}>
+          <h2 className="text-xl font-bold text-gray-900 mb-4 px-2">🔥 지금 핫한 학원</h2>
+          <div className="relative overflow-hidden rounded-2xl shadow-lg">
+            <div 
+              className="flex transition-transform duration-500 ease-in-out"
+              style={{ transform: `translateX(-${currentAcademyIndex * 100}%)` }}
+            >
+              {hotAcademies.map((academy, index) => (
+                <div key={academy.id} className="min-w-full bg-white p-6">
+                  <div className="flex items-center gap-4">
+                    <img 
+                      src={academy.image} 
+                      alt={academy.name}
+                      className="w-20 h-20 rounded-xl object-cover"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = "/placeholder.svg";
+                      }}
+                    />
+                    <div className="flex-1">
+                      <h3 className="font-bold text-lg text-gray-900 mb-2">{academy.name}</h3>
+                      <div className="flex items-center gap-4 text-sm text-gray-600">
+                        <div className="flex items-center">
+                          <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />
+                          <span>{academy.rating}</span>
+                        </div>
+                        <div className="flex items-center">
+                          <MapPin className="w-4 h-4 text-blue-500 mr-1" />
+                          <span>{academy.location}</span>
+                        </div>
+                        <div className="flex items-center">
+                          <Users className="w-4 h-4 text-green-500 mr-1" />
+                          <span>{academy.studentCount}명</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            {/* 슬라이더 인디케이터 */}
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
+              {hotAcademies.map((_, index) => (
+                <div
+                  key={index}
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    index === currentAcademyIndex ? "bg-blue-600 w-6" : "bg-gray-300"
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* 모바일 통계 카드 */}
@@ -70,7 +139,7 @@ const Index = () => {
             <div 
               key={index} 
               className="bg-white rounded-2xl p-6 text-center shadow-lg border border-gray-100 transform hover:scale-105 transition-all duration-300 animate-fade-in"
-              style={{ animationDelay: `${400 + index * 100}ms` }}
+              style={{ animationDelay: `${600 + index * 100}ms` }}
             >
               <CountUpAnimation
                 end={stat.number}
@@ -84,7 +153,7 @@ const Index = () => {
         </div>
 
         {/* 모바일 안내 섹션 */}
-        <div className="mt-8 bg-white rounded-2xl p-6 shadow-lg animate-fade-in" style={{ animationDelay: "800ms" }}>
+        <div className="mt-8 bg-white rounded-2xl p-6 shadow-lg animate-fade-in" style={{ animationDelay: "1000ms" }}>
           <h3 className="text-lg font-bold text-gray-900 mb-3 text-center">
             🎯 맞춤형 학원 찾기
           </h3>
