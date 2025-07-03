@@ -161,33 +161,31 @@ const Feed = () => {
             {/* 모바일 뉴스 리스트 */}
             <div className="space-y-4">
               {filteredNews.map((news, index) => (
-                <Card 
-                  key={news.id} 
-                  className="hover:shadow-lg transition-all duration-300 rounded-2xl animate-fade-in"
-                  style={{ animationDelay: `${index * 100}ms` }}
+                <Link 
+                  key={news.id}
+                  to={`/news/${news.id}`}
+                  className="block"
                 >
-                  <CardHeader className="pb-3">
-                    <div className="flex items-start justify-between mb-2">
-                      <Badge variant="secondary" className="rounded-full">
-                        {news.category}
-                      </Badge>
-                      <span className="text-sm text-gray-500">{news.date}</span>
-                    </div>
-                    <CardTitle className="text-lg leading-tight">
-                      {news.title}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="pt-0">
-                    <p className="text-gray-600 mb-4 text-sm leading-relaxed">{news.summary}</p>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="rounded-xl border-2 hover:border-blue-500 hover:text-blue-600"
-                    >
-                      자세히 보기
-                    </Button>
-                  </CardContent>
-                </Card>
+                  <Card 
+                    className="hover:shadow-lg transition-all duration-300 rounded-2xl animate-fade-in cursor-pointer"
+                    style={{ animationDelay: `${index * 100}ms` }}
+                  >
+                    <CardHeader className="pb-3">
+                      <div className="flex items-start justify-between mb-2">
+                        <Badge variant="secondary" className="rounded-full">
+                          {news.category}
+                        </Badge>
+                        <span className="text-sm text-gray-500">{news.date}</span>
+                      </div>
+                      <CardTitle className="text-lg leading-tight">
+                        {news.title}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="pt-0">
+                      <p className="text-gray-600 text-sm leading-relaxed">{news.summary}</p>
+                    </CardContent>
+                  </Card>
+                </Link>
               ))}
             </div>
           </TabsContent>

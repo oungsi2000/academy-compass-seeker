@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { 
   Star, MapPin, Users, Calendar, BookOpen, 
@@ -22,6 +22,8 @@ const AcademyDetail = () => {
   const [selectedTeacher, setSelectedTeacher] = useState(null);
   const [isTeacherDialogOpen, setIsTeacherDialogOpen] = useState(false);
   const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("teachers");
+  const teachersRef = useRef<HTMLDivElement>(null);
 
   // 시설 아이콘 매핑
   const facilityIcons: { [key: string]: any } = {
@@ -59,6 +61,22 @@ const AcademyDetail = () => {
     setSelectedTeacher(teacher);
     setIsTeacherDialogOpen(true);
   };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (teachersRef.current) {
+        const rect = teachersRef.current.getBoundingClientRect();
+        const isVisible = rect.top >= 0 && rect.top <= window.innerHeight * 0.5;
+        
+        if (isVisible && activeTab !== "teachers") {
+          setActiveTab("teachers");
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [activeTab]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -179,7 +197,7 @@ const AcademyDetail = () => {
         </div>
 
         {/* 상세 정보 탭 */}
-        <Tabs defaultValue="teachers" className="space-y-4">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="teachers" className="text-xs">강사진</TabsTrigger>
             <TabsTrigger value="curriculum" className="text-xs">커리큘럼</TabsTrigger>
@@ -188,7 +206,9 @@ const AcademyDetail = () => {
           </TabsList>
 
           <TabsContent value="teachers">
-            <TeacherSlider teachers={academy.teachers} onTeacherClick={handleTeacherClick} />
+            <div ref={teachersRef}>
+              <TeacherSlider teachers={academy.teachers} onTeacherClick={handleTeacherClick} />
+            </div>
           </TabsContent>
 
           <TabsContent value="curriculum">

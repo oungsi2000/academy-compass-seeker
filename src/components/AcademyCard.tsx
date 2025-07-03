@@ -1,5 +1,5 @@
 
-import { Star, MapPin, Users, Phone, MessageCircle, Gift, Target, Clock } from "lucide-react";
+import { Star, MapPin, Users, Phone, MessageCircle, Gift, Target, Clock, Navigation } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -104,6 +104,18 @@ const AcademyCard = ({ academy }: AcademyCardProps) => {
                 >
                   <MessageCircle className="w-3 h-3 mr-1" />
                   문의
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="px-3 py-1.5 text-xs rounded-lg"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const mapUrl = `https://maps.google.com/maps?q=${encodeURIComponent(academy.address)}`;
+                    window.open(mapUrl, '_blank');
+                  }}
+                >
+                  <Navigation className="w-3 h-3" />
                 </Button>
               </div>
             </div>
