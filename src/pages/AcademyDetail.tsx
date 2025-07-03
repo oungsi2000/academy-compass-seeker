@@ -147,10 +147,12 @@ const AcademyDetail = () => {
               >
                 상담 신청
               </Button>
-              <Button variant="outline" className="flex-1">
-                <MessageCircle className="w-4 h-4 mr-2" />
-                문의하기
-              </Button>
+              <Link to={`/chat/${academy.id}`}>
+                <Button variant="outline" className="flex-1">
+                  <MessageCircle className="w-4 h-4 mr-2" />
+                  문의하기
+                </Button>
+              </Link>
             </div>
             <Link to={`/academy/${academy.id}/results`}>
               <Button variant="outline" className="w-full">
