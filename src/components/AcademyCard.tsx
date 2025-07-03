@@ -66,17 +66,20 @@ const AcademyCard = ({ academy }: AcademyCardProps) => {
                     <MapPin className="w-3 h-3 mr-1 text-blue-600" />
                     <span className="truncate">{academy.location}</span>
                   </div>
-                  <div className="flex items-center text-gray-500 ml-2">
-                    <Users className="w-3 h-3 mr-1 text-green-500" />
-                    <span>{academy.studentCount}명</span>
+                  <div className="text-gray-500 text-xs">
+                    {distance}
                   </div>
                 </div>
-                <div className="text-sm font-bold text-blue-600">
-                  {(academy.registrationFee - 50000).toLocaleString()}원 ~ {(academy.registrationFee + 50000).toLocaleString()}원
+                <div className="flex items-center text-gray-500 text-xs">
+                  <Users className="w-3 h-3 mr-1 text-green-500" />
+                  <span>수강생 수 {academy.studentCount}명</span>
                 </div>
-              </div>
+               </div>
+               <div className="text-sm font-bold text-blue-600 mb-3">
+                 등록비 {(academy.registrationFee - 50000).toLocaleString()}원 ~ {(academy.registrationFee + 50000).toLocaleString()}원
+               </div>
 
-              {/* 액션 버튼 */}
+               {/* 액션 버튼 */}
               <div className="flex gap-2">
                 <Button 
                   variant="outline" 
