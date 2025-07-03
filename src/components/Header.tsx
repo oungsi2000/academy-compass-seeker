@@ -44,9 +44,9 @@ const Header = () => {
           </button>
         </div>
 
-        {/* 모바일 전체화면 메뉴 - 전체 화면 덮기 */}
+        {/* 모바일 전체화면 메뉴 - 헤더 위에 완전히 덮기 */}
         {isMenuOpen && (
-          <div className="fixed inset-0 top-0 bg-white z-[9999] animate-slide-in-right">
+          <div className="fixed inset-0 bg-white z-[99999] animate-slide-in-right">
             <nav className="flex flex-col h-full pt-20 bg-gradient-to-br from-blue-50 to-purple-50">
               {navItems.map((item, index) => (
                 <Link
