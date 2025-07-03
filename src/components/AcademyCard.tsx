@@ -20,83 +20,11 @@ const AcademyCard = ({ academy }: AcademyCardProps) => {
   
   return (
     <Link to={`/academy/${academy.id}`} className="block">
-      <Card className="hover:shadow-2xl transition-all duration-300 border-0 shadow-lg rounded-2xl overflow-hidden transform hover:scale-105 animate-fade-in">
-        <CardContent className="p-0">
-          {/* 학원 정보와 사진 */}
-          <div className="flex">
-            <div className="flex-1 p-5">
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex gap-2">
-                  <Badge variant={academy.type === "단과" ? "default" : "secondary"} className="text-xs">
-                    {academy.type}
-                  </Badge>
-                  {academy.categories.slice(0, 2).map((category) => (
-                    <Badge key={category} variant="outline" className="text-xs">
-                      {category}
-                    </Badge>
-                  ))}
-                </div>
-                <div className="flex items-center bg-white/90 backdrop-blur-sm rounded-full px-2 py-1 shadow-sm">
-                  <Star className="w-3 h-3 fill-yellow-400 text-yellow-400 mr-1" />
-                  <span className="text-sm font-bold text-gray-900">{academy.rating}</span>
-                </div>
-              </div>
-              
-              <h3 className="text-lg font-bold text-gray-900 mb-2 leading-tight">
-                {academy.name}
-              </h3>
-
-              <p className="text-gray-600 mb-3 text-sm leading-relaxed line-clamp-2">
-                {academy.description}
-              </p>
-
-              {/* 위치 정보 */}
-              <div className="space-y-1 mb-3">
-                <div className="flex items-center text-gray-600">
-                  <MapPin className="w-4 h-4 mr-2 text-blue-600" />
-                  <span className="text-sm truncate">{academy.location}</span>
-                </div>
-                <div className="flex items-center text-gray-500 text-xs ml-6">
-                  <Users className="w-3 h-3 mr-1 text-green-500" />
-                  <span>{academy.studentCount}명 수강 중</span>
-                </div>
-              </div>
-
-              {/* 등록비 정보 */}
-              <div className="text-sm font-bold text-blue-600 mb-3">
-                {(academy.registrationFee - 50000).toLocaleString()}원 ~ {(academy.registrationFee + 50000).toLocaleString()}원
-              </div>
-
-              {/* 액션 버튼들 */}
-              <div className="flex justify-end gap-2">
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  className="p-2 rounded-xl"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    window.open(`tel:${academy.phone}`);
-                  }}
-                >
-                  <Phone className="w-4 h-4" />
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  className="px-3 py-2 rounded-xl"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    // 채팅 페이지로 이동
-                    window.location.href = `/chat/${academy.id}`;
-                  }}
-                >
-                  학원 채팅으로 문의
-                </Button>
-              </div>
-            </div>
-            
-            {/* 오른쪽 정사각형 사진 */}
-            <div className="w-24 h-24 m-3 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-xl overflow-hidden flex-shrink-0">
+      <Card className="hover:shadow-lg transition-all duration-300 border-0 shadow-sm rounded-xl overflow-hidden animate-fade-in">
+        <CardContent className="p-4">
+          <div className="flex gap-4">
+            {/* 왼쪽 이미지 */}
+            <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-lg overflow-hidden flex-shrink-0">
               <img 
                 src={academy.image} 
                 alt={academy.name}
@@ -107,8 +35,76 @@ const AcademyCard = ({ academy }: AcademyCardProps) => {
                 }}
               />
             </div>
-          </div>
+            
+            {/* 메인 콘텐츠 */}
+            <div className="flex-1 min-w-0">
+              {/* 헤더 섹션 */}
+              <div className="flex items-start justify-between mb-2">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-1 mb-1">
+                    <Badge variant={academy.type === "단과" ? "default" : "secondary"} className="text-xs px-2 py-0.5">
+                      {academy.type}
+                    </Badge>
+                    <Badge variant="outline" className="text-xs px-2 py-0.5">
+                      {academy.categories[0]}
+                    </Badge>
+                  </div>
+                  <h3 className="text-base font-bold text-gray-900 leading-tight truncate">
+                    {academy.name}
+                  </h3>
+                </div>
+                <div className="flex items-center bg-yellow-50 rounded-full px-2 py-1 ml-2">
+                  <Star className="w-3 h-3 fill-yellow-400 text-yellow-400 mr-1" />
+                  <span className="text-xs font-bold text-gray-900">{academy.rating}</span>
+                </div>
+              </div>
 
+              {/* 정보 섹션 */}
+              <div className="space-y-1 mb-3">
+                <div className="flex items-center justify-between text-xs">
+                  <div className="flex items-center text-gray-600">
+                    <MapPin className="w-3 h-3 mr-1 text-blue-600" />
+                    <span className="truncate">{academy.location}</span>
+                  </div>
+                  <div className="flex items-center text-gray-500 ml-2">
+                    <Users className="w-3 h-3 mr-1 text-green-500" />
+                    <span>{academy.studentCount}명</span>
+                  </div>
+                </div>
+                <div className="text-sm font-bold text-blue-600">
+                  {(academy.registrationFee - 50000).toLocaleString()}원 ~ {(academy.registrationFee + 50000).toLocaleString()}원
+                </div>
+              </div>
+
+              {/* 액션 버튼 */}
+              <div className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="px-3 py-1.5 text-xs rounded-lg flex-1"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.open(`tel:${academy.phone}`);
+                  }}
+                >
+                  <Phone className="w-3 h-3 mr-1" />
+                  전화
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="px-3 py-1.5 text-xs rounded-lg flex-1"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.location.href = `/chat/${academy.id}`;
+                  }}
+                >
+                  <MessageCircle className="w-3 h-3 mr-1" />
+                  문의
+                </Button>
+              </div>
+            </div>
+          </div>
         </CardContent>
       </Card>
     </Link>
