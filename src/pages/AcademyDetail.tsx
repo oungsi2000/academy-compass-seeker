@@ -139,17 +139,25 @@ const AcademyDetail = () => {
           </div>
 
           {/* 액션 버튼 */}
-          <div className="flex gap-2">
-            <Button 
-              className="flex-1 bg-blue-600 hover:bg-blue-700"
-              onClick={() => window.open(`tel:${academy.phone}`)}
-            >
-              상담 신청
-            </Button>
-            <Button variant="outline" className="flex-1">
-              <MessageCircle className="w-4 h-4 mr-2" />
-              문의하기
-            </Button>
+          <div className="space-y-2">
+            <div className="flex gap-2">
+              <Button 
+                className="flex-1 bg-blue-600 hover:bg-blue-700"
+                onClick={() => window.open(`tel:${academy.phone}`)}
+              >
+                상담 신청
+              </Button>
+              <Button variant="outline" className="flex-1">
+                <MessageCircle className="w-4 h-4 mr-2" />
+                문의하기
+              </Button>
+            </div>
+            <Link to={`/academy/${academy.id}/results`}>
+              <Button variant="outline" className="w-full">
+                <Award className="w-4 h-4 mr-2" />
+                학생 합격 결과 보기
+              </Button>
+            </Link>
           </div>
 
           {/* 이벤트 정보 */}

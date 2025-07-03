@@ -69,7 +69,7 @@ const SearchForm = ({ onSearch, showAdvanced = true }: SearchFormProps) => {
               <Search className="w-5 h-5" />
             </Button>
           </div>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="space-y-3">
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3">
               <div className="flex items-center mb-2">
                 <MapPin className="w-4 h-4 text-blue-600 mr-2" />

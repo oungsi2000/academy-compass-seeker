@@ -44,10 +44,10 @@ const Header = () => {
           </button>
         </div>
 
-        {/* 모바일 전체화면 메뉴 - z-index 증가 */}
+        {/* 모바일 전체화면 메뉴 - 전체 화면 덮기 */}
         {isMenuOpen && (
-          <div className="fixed inset-0 top-16 bg-white z-[9999] animate-slide-in-right">
-            <nav className="flex flex-col h-full pt-8 bg-gradient-to-br from-blue-50 to-purple-50">
+          <div className="fixed inset-0 top-0 bg-white z-[9999] animate-slide-in-right">
+            <nav className="flex flex-col h-full pt-20 bg-gradient-to-br from-blue-50 to-purple-50">
               {navItems.map((item, index) => (
                 <Link
                   key={item.name}
