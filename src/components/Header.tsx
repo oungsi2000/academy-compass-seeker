@@ -1,10 +1,24 @@
 import { MapPin, Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
+
+  // 메뉴가 열릴 때 body 스크롤 방지
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    // cleanup
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMenuOpen]);
 
   const navItems = [
     { name: "홈", path: "/" },
@@ -44,9 +58,9 @@ const Header = () => {
           </button>
         </div>
 
-        {/* 모바일 전체화면 메뉴 - 완전히 전체 화면 덮기 */}
+        {/* 모바일 전체화면 메뉴 - 헤더에서 내려오는 애니메이션 */}
         {isMenuOpen && (
-          <div className="fixed inset-0 top-0 left-0 w-full h-full bg-white z-[99999] animate-slide-in-right">
+          <div className="fixed inset-0 top-0 left-0 w-full h-screen bg-white z-[99999] animate-slide-down">
             {/* 메뉴 헤더 */}
             <div className="flex justify-between items-center px-4 py-3 border-b">
               <div className="flex items-center space-x-2">
